@@ -3,15 +3,14 @@ import { environment } from '../environment';
 import { JwtService } from '@nestjs/jwt';
 import * as jwt from 'jsonwebtoken';
 import { GenericException } from '../exception/generic.exception';
+import { ErrorMessageCodes } from '../exception/error_messages';
 
 @Injectable()
 export class JwtHelper {
   constructor(private readonly jwtService: JwtService) {}
 
   public generateAccessToken({ userId }: { userId: number }): string {
-    const payload = {
-      userId,
-    };
+    const payload = { userId };
 
     return this.jwtService.sign(payload, {
       expiresIn: environment.accessTokenExpiration,
@@ -24,11 +23,10 @@ export class JwtHelper {
       token,
       environment.accessTokenSecret,
       async (err: jwt.VerifyErrors) => {
-        // expired
         if (err instanceof jwt.TokenExpiredError) {
           throw new GenericException(
             HttpStatus.UNAUTHORIZED,
-            'TOKEN_EXPIRED',
+            ErrorMessageCodes.EXPIRED_TOKEN,
             err.message,
           );
         }
@@ -36,7 +34,7 @@ export class JwtHelper {
         if (err instanceof jwt.JsonWebTokenError) {
           throw new GenericException(
             HttpStatus.UNAUTHORIZED,
-            'JWT_TOKEN_ERROR',
+            ErrorMessageCodes.INVALID_TOKEN,
             err.message,
           );
         }

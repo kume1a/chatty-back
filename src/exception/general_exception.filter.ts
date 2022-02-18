@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { GenericException, GenericExceptionProps } from './generic.exception';
+import { ErrorMessageCodes } from './error_messages';
 
 @Catch()
 export class GeneralExceptionFilter implements ExceptionFilter {
@@ -28,7 +29,8 @@ export class GeneralExceptionFilter implements ExceptionFilter {
         {
           message: exceptionResponse?.message ?? '',
           messageCode:
-            exceptionResponse?.messageCode ?? 'INTERNAL_SERVER_ERROR',
+            exceptionResponse?.messageCode ??
+            ErrorMessageCodes.INTERNAL_SERVER_ERROR,
           statusCode,
         },
         statusCode,
@@ -47,7 +49,7 @@ export class GeneralExceptionFilter implements ExceptionFilter {
         ctx.getResponse(),
         {
           message: message ?? exception.message,
-          messageCode: 'INTERNAL_SERVER_ERROR',
+          messageCode: ErrorMessageCodes.INTERNAL_SERVER_ERROR,
           statusCode,
         },
         statusCode,
@@ -58,7 +60,7 @@ export class GeneralExceptionFilter implements ExceptionFilter {
       ctx.getResponse(),
       {
         message: 'internal server error',
-        messageCode: 'INTERNAL_SERVER_ERROR',
+        messageCode: ErrorMessageCodes.INTERNAL_SERVER_ERROR,
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
       },
       HttpStatus.INTERNAL_SERVER_ERROR,

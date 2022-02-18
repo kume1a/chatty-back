@@ -6,6 +6,7 @@ import { User } from '../model/entity/user.entity';
 import { AuthenticationController } from '../controller/authentication.controller';
 import { UserService } from '../service/user.service';
 import { JwtHelper } from '../helper/jwt.helper';
+import { PasswordEncoder } from '../helper/password_encoder';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { JwtHelper } from '../helper/jwt.helper';
     TypeOrmModule.forFeature([User]),
   ],
   controllers: [AuthenticationController],
-  providers: [AuthenticationService, UserService, JwtHelper],
+  providers: [AuthenticationService, UserService, JwtHelper, PasswordEncoder],
   exports: [AuthenticationService],
 })
 export class AuthenticationModule {}

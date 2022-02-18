@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { JwtHelper } from '../helper/jwt.helper';
 import { GenericException } from '../exception/generic.exception';
+import { ErrorMessageCodes } from '../exception/error_messages';
 
 @Injectable()
 export class JwtAccessTokenAuthGuard implements CanActivate {
@@ -22,7 +23,7 @@ export class JwtAccessTokenAuthGuard implements CanActivate {
     if (!authorizationHeader) {
       throw new GenericException(
         HttpStatus.UNAUTHORIZED,
-        'AUTHORIZATION_HEADER_MISSING',
+        ErrorMessageCodes.MISSING_TOKEN,
       );
     }
 
