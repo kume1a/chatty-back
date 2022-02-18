@@ -1,23 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { User, User_ } from '../model/entity/user.entity';
-import { InjectRepository } from '@nestjs/typeorm';
+import { User } from '../model/entity/user.entity';
+import { UserRepository } from '../repositories/user.repository';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   public async existsByEmail(email: string): Promise<boolean> {
-    const countByEmail: { count: number } | undefined =
-      await this.userRepository
-        .createQueryBuilder(User_.TABLE_NAME)
-        .where(`${User_.TABLE_NAME}.${User_.EMAIL} = :email`, { email })
-        .select(`COUNT(${User_.TABLE_NAME}.${User_.ID})`)
-        .getRawOne();
+    const countByEmail = await this.userRepository.countByEmail(email);
 
-    return countByEmail != null && countByEmail.count > 0;
+    return countByEmail && countByEmail > 0;
   }
 
   public async createUser({
@@ -42,22 +34,10 @@ export class UserService {
   }
 
   public async getPasswordFor(email: string): Promise<string | undefined> {
-    const result = await this.userRepository
-      .createQueryBuilder(User_.TABLE_NAME)
-      .where(`${User_.TABLE_NAME}.${User_.EMAIL} = :email`, { email })
-      .select(`${User_.TABLE_NAME}.${User_.PASSWORD}`)
-      .getOne();
-
-    return result?.password;
+    return this.userRepository.getPasswordForEmail(email);
   }
 
-  async getIdFor(email: string): Promise<number | undefined> {
-    const result = await this.userRepository
-      .createQueryBuilder(User_.TABLE_NAME)
-      .where(`${User_.TABLE_NAME}.${User_.EMAIL} = :email`, { email })
-      .select(`${User_.TABLE_NAME}.${User_.ID}`)
-      .getOne();
-
-    return result?.id;
+  async getIdForEmail(email: string): Promise<number | undefined> {
+    return this.userRepository.getIdForEmail(email);
   }
 }

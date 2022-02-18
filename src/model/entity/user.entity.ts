@@ -1,20 +1,22 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
+import { BaseEntity, BaseEntity_ } from './common/base.entity';
+import { ChatParticipant } from './chat_participant.entity';
+import { ChatMessage } from './chat_message.entity';
 
 export class User_ {
-  static readonly TABLE_NAME = 'users';
+  static readonly TN = 'users';
 
-  static readonly ID = 'id';
+  static readonly ID = BaseEntity_.ID;
+  static readonly CREATED_AT = BaseEntity_.CREATED_AT;
+  static readonly UPDATED_AT = BaseEntity_.UPDATED_AT;
   static readonly FIRST_NAME = 'firstName';
   static readonly LAST_NAME = 'lastName';
   static readonly EMAIL = 'email';
   static readonly PASSWORD = 'password';
 }
 
-@Entity({ name: User_.TABLE_NAME })
-export class User {
-  @PrimaryGeneratedColumn({ name: User_.ID, type: 'int8' })
-  id: number;
-
+@Entity({ name: User_.TN })
+export class User extends BaseEntity {
   @Column({ name: User_.FIRST_NAME, nullable: false })
   firstName: string;
 
@@ -26,4 +28,10 @@ export class User {
 
   @Column({ name: User_.PASSWORD, nullable: false })
   password: string;
+
+  @OneToMany(() => ChatParticipant, (chatParticipant) => chatParticipant.user)
+  chatParticipants: ChatParticipant[];
+
+  @OneToMany(() => ChatMessage, (chatMessage) => chatMessage.user)
+  chatMessages: ChatMessage[];
 }

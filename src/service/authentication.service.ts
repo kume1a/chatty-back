@@ -76,7 +76,7 @@ export class AuthenticationService {
       );
     }
 
-    const userId = await this.userService.getIdFor(email);
+    const userId = await this.userService.getIdForEmail(email);
     const accessToken = this.jwtHelper.generateAccessToken({ userId });
 
     return new AuthenticationPayloadDto(accessToken);
