@@ -4,6 +4,7 @@ import { UserService } from '../service/user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserRepository } from '../repositories/user.repository';
 import { AuthenticationGuardModule } from './common/authentication_guard.module';
+import { UserMapper } from '../model/mappers/user.mapper';
 
 @Module({
   imports: [
@@ -11,6 +12,6 @@ import { AuthenticationGuardModule } from './common/authentication_guard.module'
     TypeOrmModule.forFeature([UserRepository]),
   ],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService, UserMapper],
 })
 export class UserModule {}

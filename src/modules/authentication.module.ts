@@ -8,6 +8,7 @@ import { JwtHelper } from '../helper/jwt.helper';
 import { PasswordEncoder } from '../helper/password_encoder';
 import { UserRepository } from '../repositories/user.repository';
 import { JwtTokenExtractor } from '../helper/jwt_token.extractor';
+import { UserMapper } from '../model/mappers/user.mapper';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { JwtTokenExtractor } from '../helper/jwt_token.extractor';
     JwtHelper,
     PasswordEncoder,
     JwtTokenExtractor,
+    UserMapper,
   ],
-  exports: [AuthenticationService],
 })
 export class AuthenticationModule {}

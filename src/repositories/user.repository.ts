@@ -58,4 +58,16 @@ export class UserRepository extends Repository<User> {
       .orderBy(`COUNT(${ChatMessage_.TN}.${ChatMessage_.ID})`, 'DESC')
       .getMany();
   }
+
+  public async findById(userId: number): Promise<User> {
+    return this.createQueryBuilder(User_.TN)
+      .where(`${User_.TN}.${User_.ID} = :userId`, { userId })
+      .select([
+        `${User_.TN}.${User_.ID}`,
+        `${User_.TN}.${User_.FIRST_NAME}`,
+        `${User_.TN}.${User_.LAST_NAME}`,
+        `${User_.TN}.${User_.EMAIL}`,
+      ])
+      .getOne();
+  }
 }

@@ -4,22 +4,18 @@ import { MessageType } from './message_type.entity';
 import { User } from './user.entity';
 import { Chat } from './chat.entity';
 
-export class ChatMessage_ {
+export class ChatMessage_ extends BaseEntity_ {
   public static readonly TN = 'chat_messages';
 
-  public static readonly ID = BaseEntity_.ID;
-  public static readonly CREATED_AT = BaseEntity_.CREATED_AT;
-  public static readonly UPDATED_AT = BaseEntity_.UPDATED_AT;
-  public static readonly DELETED_AT = BaseEntity_.DELETED_AT;
+  public static readonly TEXT_MESSAGE = 'textMessage';
+  public static readonly IMAGE_URL = 'imageUrl';
+  public static readonly VOICE_URL = 'voiceUrl';
+  public static readonly VIDEO_URL = 'videoUrl';
+  public static readonly GIF_URL = 'gifUrl';
 
-  public static readonly TEXT_MESSAGE = 'text_message';
-  public static readonly IMAGE_URL = 'image_url';
-  public static readonly VOICE_URL = 'voice_url';
-  public static readonly GIF_URL = 'gif_url';
-
-  public static readonly MESSAGE_TYPE_ID = 'message_type_id';
-  public static readonly USER_ID = 'user_id';
-  public static readonly CHAT_ID = 'chat_id';
+  public static readonly MESSAGE_TYPE_ID = 'messageTypeId';
+  public static readonly USER_ID = 'userId';
+  public static readonly CHAT_ID = 'chatId';
 }
 
 @Entity(ChatMessage_.TN)
@@ -32,6 +28,9 @@ export class ChatMessage extends BaseEntity {
 
   @Column({ name: ChatMessage_.VOICE_URL, nullable: true })
   voiceUrl: string | null;
+
+  @Column({ name: ChatMessage_.VIDEO_URL, nullable: true })
+  videoUrl: string | null;
 
   @Column({ name: ChatMessage_.GIF_URL, nullable: true })
   gifURl: string | null;

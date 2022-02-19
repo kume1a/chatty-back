@@ -3,14 +3,11 @@ import { BaseEntity, BaseEntity_ } from './common/base.entity';
 import { ChatParticipant } from './chat_participant.entity';
 import { ChatMessage } from './chat_message.entity';
 
-export class User_ {
+export class User_ extends BaseEntity_ {
   static readonly TN = 'users';
 
-  static readonly ID = BaseEntity_.ID;
-  static readonly CREATED_AT = BaseEntity_.CREATED_AT;
-  static readonly UPDATED_AT = BaseEntity_.UPDATED_AT;
-  static readonly FIRST_NAME = 'first_name';
-  static readonly LAST_NAME = 'last_name';
+  static readonly FIRST_NAME = 'firstName';
+  static readonly LAST_NAME = 'lastName';
   static readonly EMAIL = 'email';
   static readonly PASSWORD = 'password';
 

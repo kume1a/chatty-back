@@ -1,16 +1,16 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { BaseEntity } from './common/base.entity';
+import { BaseEntity, BaseEntity_ } from './common/base.entity';
 import { User } from './user.entity';
 import { Chat } from './chat.entity';
 
-export class ChatParticipant_ {
+export class ChatParticipant_ extends BaseEntity_ {
   public static readonly TN = 'chat_participants';
 
-  public static readonly LAST_DELETED_AT = 'last_deleted_at';
-  public static readonly LAST_SEEN_AT = 'last_seen_at';
+  public static readonly LAST_DELETED_AT = 'lastDeletedAt';
+  public static readonly LAST_SEEN_AT = 'lastSeenAt';
 
-  public static readonly USER_ID = 'user_id';
-  public static readonly CHAT_ID = 'chat_id';
+  public static readonly USER_ID = 'userId';
+  public static readonly CHAT_ID = 'chatId';
 
   public static readonly RELATION_CHAT = 'chat';
 }

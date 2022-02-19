@@ -6,6 +6,7 @@ import { AuthenticationModule } from './authentication.module';
 import { GeneralExceptionFilter } from '../exception/general_exception.filter';
 import { UserRepository } from '../repositories/user.repository';
 import { UserModule } from './user.module';
+import { ChatModule } from './chat.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { UserModule } from './user.module';
     TypeOrmModule.forFeature([UserRepository]),
     AuthenticationModule,
     UserModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [

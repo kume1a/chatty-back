@@ -1,11 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { User } from '../model/entity/user.entity';
 import { UserRepository } from '../repositories/user.repository';
 import { UserDto } from '../model/response/user.dto';
+import { UserMapper } from '../model/mappers/user.mapper';
+import { GenericException } from '../exception/generic.exception';
+import { ErrorMessageCodes } from '../exception/error_messages';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly userMapper: UserMapper,
+  ) {}
 
   public async existsByEmail(email: string): Promise<boolean> {
     const countByEmail = await this.userRepository.countByEmail(email);
@@ -43,6 +49,24 @@ export class UserService {
   }
 
   public async getChatRecommendedUsers(userId: number): Promise<UserDto[]> {
-    return this.userRepository.getUsersPrioritizeMessageCount(userId);
+    const users = await this.userRepository.getUsersPrioritizeMessageCount(
+      userId,
+    );
+
+    return Promise.all(users.map(this.userMapper.mapToRight));
+  }
+
+  public async getUser(userId: number): Promise<UserDto> {
+    const user = await this.userRepository.findById(userId);
+    console.log(user);
+    if (!user) {
+      throw new GenericException(
+        HttpStatus.NOT_FOUND,
+        ErrorMessageCodes.USER_NOT_FOUND,
+        `user with provided id ${userId} could not be found`,
+      );
+    }
+
+    return this.userMapper.mapToRight(user);
   }
 }

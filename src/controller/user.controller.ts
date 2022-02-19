@@ -1,4 +1,11 @@
-import { Controller, Get, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { UserDto } from '../model/response/user.dto';
 import { UserService } from '../service/user.service';
 import { JwtAccessTokenAuthGuard } from '../security/jwt_access_token.guard';
@@ -19,5 +26,12 @@ export class UserController {
     @CurrentUserPayload() currentUserPayload: UserPayload,
   ): Promise<UserDto[]> {
     return this.userService.getChatRecommendedUsers(currentUserPayload.userId);
+  }
+
+  @Get('/:userId')
+  public getUser(
+    @Param('userId', ParseIntPipe) userId: number,
+  ): Promise<UserDto> {
+    return this.userService.getUser(userId);
   }
 }

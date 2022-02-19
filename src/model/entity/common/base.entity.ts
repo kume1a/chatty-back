@@ -7,9 +7,9 @@ import {
 
 export class BaseEntity_ {
   public static readonly ID = 'id';
-  public static readonly CREATED_AT = 'created_at';
-  public static readonly UPDATED_AT = 'updated_at';
-  public static readonly DELETED_AT = 'deleted_at';
+  public static readonly CREATED_AT = 'createdAt';
+  public static readonly UPDATED_AT = 'updatedAt';
+  public static readonly DELETED_AT = 'deletedAt';
 }
 
 export abstract class BaseEntity {

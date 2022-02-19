@@ -1,9 +1,9 @@
-import { BaseEntity } from './common/base.entity';
+import { BaseEntity, BaseEntity_ } from './common/base.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { ChatParticipant } from './chat_participant.entity';
 import { ChatMessage } from './chat_message.entity';
 
-export class Chat_ {
+export class Chat_ extends BaseEntity_ {
   public static readonly TN = 'chats';
 
   public static readonly NAME = 'name';
