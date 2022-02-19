@@ -7,29 +7,26 @@ import {
 import { JwtHelper } from '../helper/jwt.helper';
 import { GenericException } from '../exception/generic.exception';
 import { ErrorMessageCodes } from '../exception/error_messages';
+import { JwtTokenExtractor } from '../helper/jwt_token.extractor';
 
 @Injectable()
 export class JwtAccessTokenAuthGuard implements CanActivate {
-  constructor(private readonly jwtHelper: JwtHelper) {}
-
-  private static readonly AUTHORIZATION_HEADER = 'authorization';
-  private static readonly AUTHORIZATION_HEADER_START = 'Bearer ';
+  constructor(
+    private readonly jwtHelper: JwtHelper,
+    private readonly jwtTokenExtractor: JwtTokenExtractor,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const http = context.switchToHttp();
-    const authorizationHeader =
-      http.getRequest().headers[JwtAccessTokenAuthGuard.AUTHORIZATION_HEADER];
+    const accessToken = this.jwtTokenExtractor.extractJwtToken(
+      context.switchToHttp().getRequest().headers,
+    );
 
-    if (!authorizationHeader) {
+    if (!accessToken) {
       throw new GenericException(
         HttpStatus.UNAUTHORIZED,
         ErrorMessageCodes.MISSING_TOKEN,
       );
     }
-
-    const accessToken = authorizationHeader.slice(
-      JwtAccessTokenAuthGuard.AUTHORIZATION_HEADER_START.length,
-    );
 
     return this.jwtHelper.validateToken(accessToken);
   }

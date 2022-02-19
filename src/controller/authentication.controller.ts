@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { SignInRequestDto } from '../model/request/sign_in_request_dto';
-import { SignUpRequestDto } from '../model/request/sign_up_request_dto';
+import { SignInRequestDto } from '../model/request/sign_in_request.dto';
+import { SignUpRequestDto } from '../model/request/sign_up_request.dto';
 import { AuthenticationService } from '../service/authentication.service';
 import { AuthenticationPayloadDto } from '../model/response/authentication_payload.dto';
 

@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as jwt from 'jsonwebtoken';
 import { GenericException } from '../exception/generic.exception';
 import { ErrorMessageCodes } from '../exception/error_messages';
+import { UserPayload } from '../model/common/user_payload';
 
 @Injectable()
 export class JwtHelper {
@@ -42,5 +43,32 @@ export class JwtHelper {
     );
 
     return true;
+  }
+
+  public async getUserPayload(
+    jwtToken: string,
+  ): Promise<UserPayload | undefined> {
+    const payload = this.jwtService.decode(jwtToken);
+
+    if (
+      !payload ||
+      typeof payload !== 'object' ||
+      typeof payload?.userId !== 'string' ||
+      typeof payload?.iat !== 'number' ||
+      typeof payload?.exp !== 'number'
+    ) {
+      return undefined;
+    }
+
+    const userId = parseInt(payload.userId);
+    if (!userId) {
+      return undefined;
+    }
+
+    return {
+      userId: userId,
+      issuedAt: payload.iat,
+      expirationTime: payload.exp,
+    };
   }
 }

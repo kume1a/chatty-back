@@ -7,6 +7,7 @@ import { UserService } from '../service/user.service';
 import { JwtHelper } from '../helper/jwt.helper';
 import { PasswordEncoder } from '../helper/password_encoder';
 import { UserRepository } from '../repositories/user.repository';
+import { JwtTokenExtractor } from '../helper/jwt_token.extractor';
 
 @Module({
   imports: [
@@ -14,7 +15,13 @@ import { UserRepository } from '../repositories/user.repository';
     TypeOrmModule.forFeature([UserRepository]),
   ],
   controllers: [AuthenticationController],
-  providers: [AuthenticationService, UserService, JwtHelper, PasswordEncoder],
+  providers: [
+    AuthenticationService,
+    UserService,
+    JwtHelper,
+    PasswordEncoder,
+    JwtTokenExtractor,
+  ],
   exports: [AuthenticationService],
 })
 export class AuthenticationModule {}

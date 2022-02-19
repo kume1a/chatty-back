@@ -2,18 +2,17 @@ import { HttpStatus, Module, ValidationPipe } from '@nestjs/common';
 import { AppController } from '../controller/app.controller';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserService } from '../service/user.service';
 import { AuthenticationModule } from './authentication.module';
 import { GeneralExceptionFilter } from '../exception/general_exception.filter';
-import { TestModule } from './test.module';
 import { UserRepository } from '../repositories/user.repository';
+import { UserModule } from './user.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
     TypeOrmModule.forFeature([UserRepository]),
     AuthenticationModule,
-    TestModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [
@@ -29,7 +28,6 @@ import { UserRepository } from '../repositories/user.repository';
       provide: APP_FILTER,
       useClass: GeneralExceptionFilter,
     },
-    UserService,
   ],
 })
 export class AppModule {}

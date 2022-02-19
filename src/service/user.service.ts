@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '../model/entity/user.entity';
 import { UserRepository } from '../repositories/user.repository';
+import { UserDto } from '../model/response/user.dto';
 
 @Injectable()
 export class UserService {
@@ -37,7 +38,11 @@ export class UserService {
     return this.userRepository.getPasswordForEmail(email);
   }
 
-  async getIdForEmail(email: string): Promise<number | undefined> {
+  public async getIdForEmail(email: string): Promise<number | undefined> {
     return this.userRepository.getIdForEmail(email);
+  }
+
+  public async getChatRecommendedUsers(userId: number): Promise<UserDto[]> {
+    return this.userRepository.getUsersPrioritizeMessageCount(userId);
   }
 }

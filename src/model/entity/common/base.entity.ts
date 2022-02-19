@@ -1,5 +1,6 @@
 import {
   CreateDateColumn,
+  DeleteDateColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -8,6 +9,7 @@ export class BaseEntity_ {
   public static readonly ID = 'id';
   public static readonly CREATED_AT = 'created_at';
   public static readonly UPDATED_AT = 'updated_at';
+  public static readonly DELETED_AT = 'deleted_at';
 }
 
 export abstract class BaseEntity {
@@ -29,4 +31,10 @@ export abstract class BaseEntity {
     name: BaseEntity_.UPDATED_AT,
   })
   public updatedAt: Date;
+
+  @DeleteDateColumn({
+    type: 'timestamptz',
+    name: BaseEntity_.DELETED_AT,
+  })
+  public deletedAt?: Date;
 }

@@ -9,10 +9,12 @@ export class User_ {
   static readonly ID = BaseEntity_.ID;
   static readonly CREATED_AT = BaseEntity_.CREATED_AT;
   static readonly UPDATED_AT = BaseEntity_.UPDATED_AT;
-  static readonly FIRST_NAME = 'firstName';
-  static readonly LAST_NAME = 'lastName';
+  static readonly FIRST_NAME = 'first_name';
+  static readonly LAST_NAME = 'last_name';
   static readonly EMAIL = 'email';
   static readonly PASSWORD = 'password';
+
+  static readonly RELATION_CHAT_PARTICIPANTS = 'chatParticipants';
 }
 
 @Entity({ name: User_.TN })

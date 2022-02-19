@@ -7,6 +7,9 @@ export class Chat_ {
   public static readonly TN = 'chats';
 
   public static readonly NAME = 'name';
+
+  public static readonly RELATION_CHAT_PARTICIPANTS = 'chatParticipants';
+  public static readonly RELATION_CHAT_MESSAGES = 'chatMessages';
 }
 
 @Entity(Chat_.TN)
