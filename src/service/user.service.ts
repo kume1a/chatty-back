@@ -57,9 +57,7 @@ export class UserService {
   }
 
   public async getUser(userId: number): Promise<UserDto> {
-    console.log(await this.userRepository.countByEmail('email@gmail.com'));
     const user = await this.userRepository.findById(userId);
-    console.log(user);
     if (!user) {
       throw new GenericException(
         HttpStatus.NOT_FOUND,
@@ -69,5 +67,11 @@ export class UserService {
     }
 
     return this.userMapper.mapToRight(user);
+  }
+
+  public async search(keyword: string): Promise<UserDto[]> {
+    const users = await this.userRepository.searchByKeyword(keyword);
+
+    return Promise.all(users.map(this.userMapper.mapToRight));
   }
 }

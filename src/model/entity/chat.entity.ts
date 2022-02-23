@@ -8,8 +8,8 @@ export class Chat_ extends BaseEntity_ {
 
   public static readonly NAME = 'name';
 
-  public static readonly RELATION_CHAT_PARTICIPANTS = 'chatParticipants';
-  public static readonly RELATION_CHAT_MESSAGES = 'chatMessages';
+  public static readonly RL_CHAT_PARTICIPANTS = 'chatParticipants';
+  public static readonly RL_CHAT_MESSAGES = 'chatMessages';
 }
 
 @Entity(Chat_.TN)

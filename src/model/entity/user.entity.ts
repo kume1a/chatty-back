@@ -12,7 +12,7 @@ export class User_ extends BaseEntity_ {
   static readonly PASSWORD = 'password';
   static readonly PROFILE_IMAGE_URL = 'profileImageUrl';
 
-  static readonly RELATION_CHAT_PARTICIPANTS = 'chatParticipants';
+  static readonly RL_CHAT_PARTICIPANTS = 'chatParticipants';
 }
 
 @Entity({ name: User_.TN })

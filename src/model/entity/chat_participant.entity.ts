@@ -12,7 +12,7 @@ export class ChatParticipant_ extends BaseEntity_ {
   public static readonly USER_ID = 'userId';
   public static readonly CHAT_ID = 'chatId';
 
-  public static readonly RELATION_CHAT = 'chat';
+  public static readonly RL_CHAT = 'chat';
 }
 
 @Entity(ChatParticipant_.TN)

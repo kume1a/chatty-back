@@ -13,7 +13,7 @@ export class ChatRepository extends Repository<Chat> {
         `${ChatMessage_.TN}.${ChatMessage_.CHAT_ID} = ${Chat_.TN}.${Chat_.ID}`,
       )
       .leftJoin(
-        `${Chat_.TN}.${Chat_.RELATION_CHAT_PARTICIPANTS}`,
+        `${Chat_.TN}.${Chat_.RL_CHAT_PARTICIPANTS}`,
         ChatParticipant_.TN,
       )
       .where(`${ChatParticipant_.TN}.${ChatParticipant_.USER_ID} = :userId`, {

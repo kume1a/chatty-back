@@ -41,14 +41,11 @@ export class UserRepository extends Repository<User> {
         `${User_.TN}.${User_.UPDATED_AT}`,
       ])
       .leftJoin(
-        `${User_.TN}.${User_.RELATION_CHAT_PARTICIPANTS}`,
+        `${User_.TN}.${User_.RL_CHAT_PARTICIPANTS}`,
         ChatParticipant_.TN,
       )
-      .leftJoin(
-        `${ChatParticipant_.TN}.${ChatParticipant_.RELATION_CHAT}`,
-        Chat_.TN,
-      )
-      .leftJoin(`${Chat_.TN}.${Chat_.RELATION_CHAT_MESSAGES}`, ChatMessage_.TN)
+      .leftJoin(`${ChatParticipant_.TN}.${ChatParticipant_.RL_CHAT}`, Chat_.TN)
+      .leftJoin(`${Chat_.TN}.${Chat_.RL_CHAT_MESSAGES}`, ChatMessage_.TN)
       .where(`${User_.TN}.${User_.ID} != :userId`, { userId })
       .groupBy(`${User_.TN}.${User_.ID}`)
       .orderBy(`COUNT(${ChatMessage_.TN}.${ChatMessage_.ID})`, 'DESC')
@@ -59,5 +56,26 @@ export class UserRepository extends Repository<User> {
     return this.findOne(userId, {
       select: [User_.ID, User_.FIRST_NAME, User_.LAST_NAME, User_.EMAIL],
     });
+  }
+
+  public async searchByKeyword(keyword: string): Promise<User[]> {
+    return this.createQueryBuilder(User_.TN)
+      .select([
+        `${User_.TN}.${User_.ID}`,
+        `${User_.TN}.${User_.FIRST_NAME}`,
+        `${User_.TN}.${User_.LAST_NAME}`,
+        `${User_.TN}.${User_.EMAIL}`,
+        `${User_.TN}.${User_.CREATED_AT}`,
+      ])
+      .where(
+        `LOWER(
+          CONCAT(
+            ${User_.TN}.${User_.FIRST_NAME},
+            ${User_.TN}.${User_.LAST_NAME}
+          )
+        ) LIKE LOWER(:keyword)`,
+      )
+      .setParameters({ keyword: `%${keyword}%` })
+      .getMany();
   }
 }
