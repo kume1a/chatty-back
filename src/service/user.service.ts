@@ -57,6 +57,7 @@ export class UserService {
   }
 
   public async getUser(userId: number): Promise<UserDto> {
+    console.log(await this.userRepository.countByEmail('email@gmail.com'));
     const user = await this.userRepository.findById(userId);
     console.log(user);
     if (!user) {

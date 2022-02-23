@@ -7,6 +7,7 @@ import { GeneralExceptionFilter } from '../exception/general_exception.filter';
 import { UserRepository } from '../repositories/user.repository';
 import { UserModule } from './user.module';
 import { ChatModule } from './chat.module';
+import { MessageModule } from './message.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ChatModule } from './chat.module';
     AuthenticationModule,
     UserModule,
     ChatModule,
+    MessageModule,
   ],
   controllers: [AppController],
   providers: [

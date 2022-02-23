@@ -7,13 +7,9 @@ import { ChatMessage_ } from '../model/entity/chat_message.entity';
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
   public async countByEmail(email: string): Promise<number | undefined> {
-    const countByEmail: { count: number } | undefined =
-      await this.createQueryBuilder(User_.TN)
-        .where(`${User_.TN}.${User_.EMAIL} = :email`, { email })
-        .select(`COUNT(${User_.TN}.${User_.ID})`)
-        .getRawOne();
-
-    return countByEmail?.count;
+    return this.count({
+      where: [{ email: email }],
+    });
   }
 
   public async getPasswordForEmail(email: string): Promise<string | undefined> {
@@ -60,14 +56,8 @@ export class UserRepository extends Repository<User> {
   }
 
   public async findById(userId: number): Promise<User> {
-    return this.createQueryBuilder(User_.TN)
-      .where(`${User_.TN}.${User_.ID} = :userId`, { userId })
-      .select([
-        `${User_.TN}.${User_.ID}`,
-        `${User_.TN}.${User_.FIRST_NAME}`,
-        `${User_.TN}.${User_.LAST_NAME}`,
-        `${User_.TN}.${User_.EMAIL}`,
-      ])
-      .getOne();
+    return this.findOne(userId, {
+      select: [User_.ID, User_.FIRST_NAME, User_.LAST_NAME, User_.EMAIL],
+    });
   }
 }

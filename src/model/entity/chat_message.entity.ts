@@ -39,9 +39,15 @@ export class ChatMessage extends BaseEntity {
   @JoinColumn({ name: ChatMessage_.MESSAGE_TYPE_ID })
   messageType: MessageType;
 
-  @ManyToOne(() => User, (user) => user.chatMessages)
+  @Column({ name: ChatMessage_.USER_ID })
+  userId: number;
+
+  @ManyToOne(() => User)
   @JoinColumn({ name: ChatMessage_.USER_ID })
   user: User;
+
+  @Column({ name: ChatMessage_.CHAT_ID })
+  chatId: number;
 
   @ManyToOne(() => Chat, (chat) => chat.chatMessages)
   @JoinColumn({ name: ChatMessage_.CHAT_ID })

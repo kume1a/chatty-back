@@ -29,12 +29,14 @@ export abstract class BaseEntity {
     default: () => 'CURRENT_TIMESTAMP',
     onUpdate: 'CURRENT_TIMESTAMP',
     name: BaseEntity_.UPDATED_AT,
+    nullable: true,
   })
-  public updatedAt: Date;
+  public updatedAt: Date | null;
 
   @DeleteDateColumn({
     type: 'timestamptz',
     name: BaseEntity_.DELETED_AT,
+    nullable: true,
   })
-  public deletedAt?: Date;
+  public deletedAt?: Date | null;
 }

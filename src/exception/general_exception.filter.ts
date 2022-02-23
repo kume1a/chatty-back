@@ -4,6 +4,7 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { GenericException, GenericExceptionProps } from './generic.exception';
@@ -37,18 +38,27 @@ export class GeneralExceptionFilter implements ExceptionFilter {
       );
     }
 
+    if (exception instanceof UnprocessableEntityException) {
+      return httpAdapter.reply(
+        ctx.getResponse(),
+        {
+          message: exception.message,
+          messageCode: ErrorMessageCodes.VALIDATION_ERROR,
+          statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+          validationErrors: (exception.getResponse() as any)?.message,
+        },
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+
     if (exception instanceof HttpException) {
-      const exceptionResponseBody = exception.getResponse() as any;
       const statusCode =
         exception.getStatus() || HttpStatus.INTERNAL_SERVER_ERROR;
-      const message = Array.isArray(exceptionResponseBody?.message)
-        ? exceptionResponseBody?.message[0]
-        : null;
 
       return httpAdapter.reply(
         ctx.getResponse(),
         {
-          message: message ?? exception.message,
+          message: exception.message,
           messageCode: ErrorMessageCodes.INTERNAL_SERVER_ERROR,
           statusCode,
         },
