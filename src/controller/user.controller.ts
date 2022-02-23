@@ -28,13 +28,18 @@ export class UserController {
   @Get('/chat-recommended-users')
   public async getChatRecommendedUsers(
     @CurrentUserPayload() currentUserPayload: UserPayload,
+    @Query('takeCount', ParseIntPipe) takeCount: number,
   ): Promise<UserDto[]> {
-    return this.userService.getChatRecommendedUsers(currentUserPayload.userId);
+    return this.userService.getChatRecommendedUsers({
+      userId: currentUserPayload.userId,
+      takeCount: takeCount,
+    });
   }
 
   @Get('/search')
   public async searchUsers(
     @Query('keyword') keyword: string,
+    @Query('takeCount', ParseIntPipe) takeCount: number,
   ): Promise<UserDto[]> {
     if (!keyword) {
       throw new GenericException(
@@ -44,7 +49,7 @@ export class UserController {
       );
     }
 
-    return this.userService.search(keyword);
+    return this.userService.search({ keyword, takeCount });
   }
 
   @Get('/:userId')

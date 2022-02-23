@@ -30,7 +30,13 @@ export class UserRepository extends Repository<User> {
     return user?.id;
   }
 
-  public async getUsersPrioritizeMessageCount(userId: number): Promise<User[]> {
+  public async getUsersPrioritizeMessageCount({
+    userId,
+    takeCount,
+  }: {
+    userId: number;
+    takeCount: number;
+  }): Promise<User[]> {
     return await this.createQueryBuilder(User_.TN)
       .select([
         `${User_.TN}.${User_.ID}`,
@@ -49,6 +55,7 @@ export class UserRepository extends Repository<User> {
       .where(`${User_.TN}.${User_.ID} != :userId`, { userId })
       .groupBy(`${User_.TN}.${User_.ID}`)
       .orderBy(`COUNT(${ChatMessage_.TN}.${ChatMessage_.ID})`, 'DESC')
+      .take(takeCount)
       .getMany();
   }
 
@@ -58,7 +65,13 @@ export class UserRepository extends Repository<User> {
     });
   }
 
-  public async searchByKeyword(keyword: string): Promise<User[]> {
+  public async searchByKeyword({
+    keyword,
+    takeCount,
+  }: {
+    keyword: string;
+    takeCount: number;
+  }): Promise<User[]> {
     return this.createQueryBuilder(User_.TN)
       .select([
         `${User_.TN}.${User_.ID}`,
@@ -76,6 +89,7 @@ export class UserRepository extends Repository<User> {
         ) LIKE LOWER(:keyword)`,
       )
       .setParameters({ keyword: `%${keyword}%` })
+      .take(takeCount)
       .getMany();
   }
 }

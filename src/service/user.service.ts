@@ -48,10 +48,17 @@ export class UserService {
     return this.userRepository.getIdForEmail(email);
   }
 
-  public async getChatRecommendedUsers(userId: number): Promise<UserDto[]> {
-    const users = await this.userRepository.getUsersPrioritizeMessageCount(
+  public async getChatRecommendedUsers({
+    userId,
+    takeCount,
+  }: {
+    userId: number;
+    takeCount: number;
+  }): Promise<UserDto[]> {
+    const users = await this.userRepository.getUsersPrioritizeMessageCount({
       userId,
-    );
+      takeCount,
+    });
 
     return Promise.all(users.map(this.userMapper.mapToRight));
   }
@@ -69,8 +76,17 @@ export class UserService {
     return this.userMapper.mapToRight(user);
   }
 
-  public async search(keyword: string): Promise<UserDto[]> {
-    const users = await this.userRepository.searchByKeyword(keyword);
+  public async search({
+    keyword,
+    takeCount,
+  }: {
+    keyword: string;
+    takeCount: number;
+  }): Promise<UserDto[]> {
+    const users = await this.userRepository.searchByKeyword({
+      keyword,
+      takeCount,
+    });
 
     return Promise.all(users.map(this.userMapper.mapToRight));
   }
