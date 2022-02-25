@@ -52,6 +52,14 @@ export class UserController {
     return this.userService.search({ keyword, takeCount });
   }
 
+  @UseInterceptors(CurrentUserPayloadInterceptor)
+  @Get('/me')
+  public async getCurrentUser(
+    @CurrentUserPayload() currentUserPayload: UserPayload,
+  ): Promise<UserDto> {
+    return this.userService.getUser(currentUserPayload.userId);
+  }
+
   @Get('/:userId')
   public async getUser(
     @Param('userId', ParseIntPipe) userId: number,
