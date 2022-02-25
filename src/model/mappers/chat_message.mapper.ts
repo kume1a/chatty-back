@@ -11,6 +11,7 @@ export class ChatMessageMapper extends SimpleMapper<
   public mapToRight(l: ChatMessage): Promise<ChatMessageDto> | ChatMessageDto {
     return new ChatMessageDto(
       l.id,
+      l.userId,
       l.messageType,
       l.textMessage,
       l.imageUrl,

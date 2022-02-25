@@ -30,6 +30,7 @@ export class ChatService {
       lastId,
       takeCount,
     });
+    console.log(chats);
 
     const totalCount = await this.chatRepository.countForUser(userId);
 
@@ -40,7 +41,16 @@ export class ChatService {
             e.id,
             e.createdAt,
             new UserDto(1, '', '', ''),
-            new ChatMessageDto(0, MessageType.TEXT, '', '', '', '', new Date()),
+            new ChatMessageDto(
+              0,
+              0,
+              MessageType.TEXT,
+              '',
+              '',
+              '',
+              '',
+              new Date(),
+            ),
           ),
       ),
       count: totalCount,

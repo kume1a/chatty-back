@@ -37,7 +37,15 @@ export class UserRepository extends Repository<User> {
     userId: number;
     takeCount: number;
   }): Promise<User[]> {
+    const ALIAS_MESSAGE_COUNT = 'chat_message_count';
+
     return await this.createQueryBuilder(User_.TN)
+      .leftJoin(
+        `${User_.TN}.${User_.RL_CHAT_PARTICIPANTS}`,
+        ChatParticipant_.TN,
+      )
+      .leftJoin(`${ChatParticipant_.TN}.${ChatParticipant_.RL_CHAT}`, Chat_.TN)
+      .leftJoin(`${Chat_.TN}.${Chat_.RL_CHAT_MESSAGES}`, ChatMessage_.TN)
       .select([
         `${User_.TN}.${User_.ID}`,
         `${User_.TN}.${User_.FIRST_NAME}`,
@@ -46,15 +54,13 @@ export class UserRepository extends Repository<User> {
         `${User_.TN}.${User_.CREATED_AT}`,
         `${User_.TN}.${User_.UPDATED_AT}`,
       ])
-      .leftJoin(
-        `${User_.TN}.${User_.RL_CHAT_PARTICIPANTS}`,
-        ChatParticipant_.TN,
+      .addSelect(
+        `COUNT(${ChatMessage_.TN}.${ChatMessage_.ID})`,
+        ALIAS_MESSAGE_COUNT,
       )
-      .leftJoin(`${ChatParticipant_.TN}.${ChatParticipant_.RL_CHAT}`, Chat_.TN)
-      .leftJoin(`${Chat_.TN}.${Chat_.RL_CHAT_MESSAGES}`, ChatMessage_.TN)
       .where(`${User_.TN}.${User_.ID} != :userId`, { userId })
       .groupBy(`${User_.TN}.${User_.ID}`)
-      .orderBy(`COUNT(${ChatMessage_.TN}.${ChatMessage_.ID})`, 'DESC')
+      .orderBy(ALIAS_MESSAGE_COUNT, 'DESC')
       .take(takeCount)
       .getMany();
   }
