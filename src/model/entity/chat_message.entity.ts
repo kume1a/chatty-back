@@ -1,8 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity, BaseEntity_ } from './common/base.entity';
-import { MessageType } from './message_type.entity';
 import { User } from './user.entity';
 import { Chat } from './chat.entity';
+import { MessageType } from '../enums/message_type.enum';
 
 export class ChatMessage_ extends BaseEntity_ {
   public static readonly TN = 'chat_messages';
@@ -12,8 +12,8 @@ export class ChatMessage_ extends BaseEntity_ {
   public static readonly VOICE_URL = 'voiceUrl';
   public static readonly VIDEO_URL = 'videoUrl';
   public static readonly GIF_URL = 'gifUrl';
+  public static readonly MESSAGE_TYPE = 'messageType';
 
-  public static readonly MESSAGE_TYPE_ID = 'messageTypeId';
   public static readonly USER_ID = 'userId';
   public static readonly CHAT_ID = 'chatId';
 }
@@ -35,8 +35,11 @@ export class ChatMessage extends BaseEntity {
   @Column({ name: ChatMessage_.GIF_URL, nullable: true })
   gifURl: string | null;
 
-  @OneToOne(() => MessageType, (messageType) => messageType.messages)
-  @JoinColumn({ name: ChatMessage_.MESSAGE_TYPE_ID })
+  @Column({
+    type: 'enum',
+    enum: MessageType,
+    name: ChatMessage_.MESSAGE_TYPE,
+  })
   messageType: MessageType;
 
   @Column({ name: ChatMessage_.USER_ID })

@@ -6,6 +6,7 @@ import { ChatMessageDto } from '../model/response/chat_message.dto';
 import { PaginatedResponseDto } from '../model/response/core/paginated_response.dto';
 import { ChatMapper } from '../model/mappers/chat.mapper';
 import { ChatParticipantService } from './chat_participant.service';
+import { MessageType } from '../model/enums/message_type.enum';
 
 @Injectable()
 export class ChatService {
@@ -39,7 +40,7 @@ export class ChatService {
             e.id,
             e.createdAt,
             new UserDto(1, '', '', ''),
-            new ChatMessageDto(0, '', '', '', '', '', new Date()),
+            new ChatMessageDto(0, MessageType.TEXT, '', '', '', '', new Date()),
           ),
       ),
       count: totalCount,
