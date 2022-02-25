@@ -53,20 +53,15 @@ export class JwtHelper {
     if (
       !payload ||
       typeof payload !== 'object' ||
-      typeof payload?.userId !== 'string' ||
+      typeof payload?.userId !== 'number' ||
       typeof payload?.iat !== 'number' ||
       typeof payload?.exp !== 'number'
     ) {
       return undefined;
     }
 
-    const userId = parseInt(payload.userId);
-    if (!userId) {
-      return undefined;
-    }
-
     return {
-      userId: userId,
+      userId: payload.userId,
       issuedAt: payload.iat,
       expirationTime: payload.exp,
     };

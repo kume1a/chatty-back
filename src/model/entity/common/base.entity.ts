@@ -13,7 +13,7 @@ export class BaseEntity_ {
 }
 
 export abstract class BaseEntity {
-  @PrimaryGeneratedColumn({ name: BaseEntity_.ID, type: 'int8' })
+  @PrimaryGeneratedColumn({ name: BaseEntity_.ID })
   public id: number;
 
   @CreateDateColumn({

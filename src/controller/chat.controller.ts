@@ -1,6 +1,8 @@
 import {
   Controller,
   Get,
+  Param,
+  ParseIntPipe,
   Query,
   UseGuards,
   UseInterceptors,
@@ -32,5 +34,23 @@ export class ChatController {
       lastId: paginationQuery.lastId,
       takeCount: paginationQuery.takeCount,
     });
+  }
+
+  @UseInterceptors(CurrentUserPayloadInterceptor)
+  @Get('/:userId')
+  public async getChatByUserId(
+    @Param('userId', ParseIntPipe) userId: number,
+    @CurrentUserPayload() currentUserPayload: UserPayload,
+  ): Promise<ChatDto> {
+    const chat = await this.chatService.getChatByUserId(userId);
+
+    if (!chat) {
+      return this.chatService.createChat({
+        participant1Id: currentUserPayload.userId,
+        participant2Id: userId,
+      });
+    }
+
+    return chat;
   }
 }

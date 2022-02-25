@@ -31,9 +31,15 @@ export class ChatParticipant extends BaseEntity {
   })
   lastSeenAt: Date | null;
 
+  @Column({ name: ChatParticipant_.USER_ID, nullable: false })
+  userId: number;
+
   @ManyToOne(() => User, (user) => user.chatParticipants)
   @JoinColumn({ name: ChatParticipant_.USER_ID })
   user: User;
+
+  @Column({ name: ChatParticipant_.CHAT_ID, nullable: false })
+  chatId: number;
 
   @ManyToOne(() => Chat, (chat) => chat.chatParticipants)
   @JoinColumn({ name: ChatParticipant_.CHAT_ID })

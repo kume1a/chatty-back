@@ -41,4 +41,22 @@ export class ChatRepository extends Repository<Chat> {
       .setParameters({ userId })
       .getCount();
   }
+
+  public async getChatByUserId(userId: number): Promise<Chat> {
+    return this.createQueryBuilder(Chat_.TN)
+      .select([`${Chat_.TN}.${Chat_.ID}`, `${Chat_.TN}.${Chat_.CREATED_AT}`])
+      .leftJoin(
+        `${Chat_.TN}.${Chat_.RL_CHAT_PARTICIPANTS}`,
+        ChatParticipant_.TN,
+      )
+      .where(`${ChatParticipant_.TN}.${ChatParticipant_.USER_ID} = :userId`)
+      .setParameters({ userId })
+      .getOne();
+  }
+
+  public async createChat(params: { name: string }): Promise<Chat> {
+    const chat = this.create({ name: params.name });
+
+    return this.save(chat);
+  }
 }
