@@ -1,12 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ChatRepository } from '../repositories/chat.repository';
 import { ChatDto } from '../model/response/chat.dto';
-import { UserDto } from '../model/response/user.dto';
-import { ChatMessageDto } from '../model/response/chat_message.dto';
 import { PaginatedResponseDto } from '../model/response/core/paginated_response.dto';
 import { ChatMapper } from '../model/mappers/chat.mapper';
 import { ChatParticipantService } from './chat_participant.service';
-import { MessageType } from '../model/enums/message_type.enum';
 
 @Injectable()
 export class ChatService {
@@ -30,30 +27,12 @@ export class ChatService {
       lastId,
       takeCount,
     });
-    console.log(chats);
-
     const totalCount = await this.chatRepository.countForUser(userId);
 
+    const data = await Promise.all(chats.map(this.chatMapper.mapFromEntryView));
+
     return {
-      data: chats.map(
-        (e) =>
-          new ChatDto(
-            e.id,
-            e.createdAt,
-            new UserDto(1, '', '', ''),
-            new ChatMessageDto(
-              0,
-              0,
-              MessageType.TEXT,
-              '',
-              '',
-              '',
-              '',
-              '',
-              new Date(),
-            ),
-          ),
-      ),
+      data: data,
       count: totalCount,
     };
   }
@@ -74,7 +53,7 @@ export class ChatService {
       userId: params.participant2Id,
     });
 
-    return this.chatMapper.mapToRight(chat);
+    return this.chatMapper.mapFromEntity(chat);
   }
 
   public async getChatByUserId(userId: number): Promise<ChatDto | undefined> {
@@ -84,6 +63,6 @@ export class ChatService {
       return undefined;
     }
 
-    return this.chatMapper.mapToRight(chat);
+    return this.chatMapper.mapFromEntity(chat);
   }
 }
