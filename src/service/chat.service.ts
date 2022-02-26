@@ -49,6 +49,7 @@ export class ChatService {
               '',
               '',
               '',
+              '',
               new Date(),
             ),
           ),

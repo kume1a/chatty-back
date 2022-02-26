@@ -6,8 +6,9 @@ export class ChatMessageDto {
     readonly userId: number,
     readonly type: MessageType,
     readonly textMessage: string,
-    readonly imageUrl: string,
-    readonly videoUrl: string,
+    readonly imageFilePath: string,
+    readonly videoFilePath: string,
+    readonly voiceFilePath: string,
     readonly gifUrl: string,
     readonly createdAt: Date,
   ) {}

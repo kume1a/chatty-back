@@ -11,19 +11,21 @@ export class ChatMessageService {
     private readonly chatMessageMapper: ChatMessageMapper,
   ) {}
 
-  public async sendMessage({
-    chatId,
-    textMessage,
-    userId,
-  }: {
+  public async sendMessage(params: {
     chatId: number;
-    textMessage: string;
     userId: number;
+    textMessage?: string | undefined;
+    imageFilePath?: string | undefined;
+    voiceFilePath?: string | undefined;
+    videoFilePath?: string | undefined;
   }) {
     const message = await this.chatMessageRepository.createMessage({
-      chatId,
-      textMessage,
-      userId,
+      chatId: params.chatId,
+      userId: params.userId,
+      textMessage: params.textMessage,
+      imageFilePath: params.imageFilePath,
+      voiceFilePath: params.voiceFilePath,
+      videoFilePath: params.videoFilePath,
     });
 
     return this.chatMessageMapper.mapToRight(message);

@@ -8,9 +8,9 @@ export class ChatMessage_ extends BaseEntity_ {
   public static readonly TN = 'chat_messages';
 
   public static readonly TEXT_MESSAGE = 'textMessage';
-  public static readonly IMAGE_URL = 'imageUrl';
-  public static readonly VOICE_URL = 'voiceUrl';
-  public static readonly VIDEO_URL = 'videoUrl';
+  public static readonly IMAGE_FILE_PATH = 'imageFilePath';
+  public static readonly VOICE_FILE_PATH = 'voiceFilePath';
+  public static readonly VIDEO_FILE_PATH = 'videoFilePath';
   public static readonly GIF_URL = 'gifUrl';
   public static readonly MESSAGE_TYPE = 'messageType';
 
@@ -23,14 +23,14 @@ export class ChatMessage extends BaseEntity {
   @Column({ name: ChatMessage_.TEXT_MESSAGE, nullable: true, type: 'text' })
   textMessage: string | null;
 
-  @Column({ name: ChatMessage_.IMAGE_URL, nullable: true })
-  imageUrl: string | null;
+  @Column({ name: ChatMessage_.IMAGE_FILE_PATH, nullable: true })
+  imageFilePath: string | null;
 
-  @Column({ name: ChatMessage_.VOICE_URL, nullable: true })
-  voiceUrl: string | null;
+  @Column({ name: ChatMessage_.VOICE_FILE_PATH, nullable: true })
+  voiceFilePath: string | null;
 
-  @Column({ name: ChatMessage_.VIDEO_URL, nullable: true })
-  videoUrl: string | null;
+  @Column({ name: ChatMessage_.VIDEO_FILE_PATH, nullable: true })
+  videoFilePath: string | null;
 
   @Column({ name: ChatMessage_.GIF_URL, nullable: true })
   gifURl: string | null;

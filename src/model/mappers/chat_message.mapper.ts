@@ -14,8 +14,9 @@ export class ChatMessageMapper extends SimpleMapper<
       l.userId,
       l.messageType,
       l.textMessage,
-      l.imageUrl,
-      l.videoUrl,
+      l.imageFilePath,
+      l.videoFilePath,
+      l.voiceFilePath,
       l.gifURl,
       l.createdAt,
     );

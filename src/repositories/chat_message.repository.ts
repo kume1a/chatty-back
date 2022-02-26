@@ -4,22 +4,31 @@ import { MessageType } from '../model/enums/message_type.enum';
 
 @EntityRepository(ChatMessage)
 export class ChatMessageRepository extends Repository<ChatMessage> {
-  public async createMessage({
-    chatId,
-    userId,
-    textMessage,
-  }: {
+  public async createMessage(params: {
     chatId: number;
     userId: number;
-    textMessage?: string;
+    textMessage?: string | undefined;
+    imageFilePath?: string | undefined;
+    voiceFilePath?: string | undefined;
+    videoFilePath?: string | undefined;
   }): Promise<ChatMessage> {
-    const messageType = MessageType.TEXT;
+    let messageType = MessageType.TEXT;
+    if (params.imageFilePath) {
+      messageType = MessageType.IMAGE;
+    } else if (params.voiceFilePath) {
+      messageType = MessageType.VOICE;
+    } else if (params.videoFilePath) {
+      messageType = MessageType.VIDEO;
+    }
 
     const message = this.create({
-      textMessage,
-      chatId,
-      userId,
+      chatId: params.chatId,
+      userId: params.userId,
       messageType,
+      textMessage: params.textMessage,
+      imageFilePath: params.imageFilePath,
+      voiceFilePath: params.voiceFilePath,
+      videoFilePath: params.videoFilePath,
     });
 
     return this.save(message);

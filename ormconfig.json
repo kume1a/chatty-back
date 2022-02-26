@@ -9,7 +9,7 @@
     "dist/**/*.entity{.ts,.js}"
   ],
   "synchronize": true,
-  "logging": false,
+  "logging": true,
   "migrationsTableName": "migrations",
   "migrations": [
     "src/database/migration/*.ts"

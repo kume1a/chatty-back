@@ -34,8 +34,8 @@ export class ChatRepository extends Repository<Chat> {
         `${User_.TN}.${User_.FIRST_NAME}`,
         `${User_.TN}.${User_.LAST_NAME}`,
         `${User_.TN}.${User_.PROFILE_IMAGE_URL}`,
-        `${ChatMessage_.TN}.*`,
       ])
+      .addSelect(`${ChatMessage_.TN}.${ChatMessage_.ID}`, 'aaa')
       .where(`${ChatParticipant_.TN}.${ChatParticipant_.USER_ID} = :userId`);
     if (lastId) {
       query.andWhere(`${Chat_.TN}.${Chat_.ID} > :lastId`);
