@@ -11,6 +11,7 @@ export class User_ extends BaseEntity_ {
   static readonly EMAIL = 'email';
   static readonly PASSWORD = 'password';
   static readonly PROFILE_IMAGE_PATH = 'profileImagePath';
+  static readonly SOCKET_ID = 'socketId';
 
   static readonly RL_CHAT_PARTICIPANTS = 'chatParticipants';
 }
@@ -31,6 +32,9 @@ export class User extends BaseEntity {
 
   @Column({ name: User_.PASSWORD })
   password: string;
+
+  @Column({ name: User_.SOCKET_ID })
+  socketId: string;
 
   @OneToMany(() => ChatParticipant, (chatParticipant) => chatParticipant.user)
   chatParticipants: ChatParticipant[];

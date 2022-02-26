@@ -21,13 +21,22 @@ export class UserRepository extends Repository<User> {
     return user?.password;
   }
 
-  public async getIdForEmail(email: string): Promise<number | undefined> {
-    const user = await this.createQueryBuilder(User_.TN)
+  public async getIdAndSocketIdForEmail(
+    email: string,
+  ): Promise<{ userId: number; socketId: string } | undefined> {
+    const result = await this.createQueryBuilder(User_.TN)
+      .select(`${User_.TN}.${User_.ID}`, `${User_.TN}_${User_.ID}`)
+      .addSelect(
+        `${User_.TN}.${User_.SOCKET_ID}`,
+        `${User_.TN}_${User_.SOCKET_ID}`,
+      )
       .where(`${User_.TN}.${User_.EMAIL} = :email`, { email })
-      .select(`${User_.TN}.${User_.ID}`)
-      .getOne();
+      .getRawOne();
 
-    return user?.id;
+    return {
+      userId: result[`${User_.TN}_${User_.ID}`],
+      socketId: result[`${User_.TN}_${User_.SOCKET_ID}`],
+    };
   }
 
   public async getUsersPrioritizeMessageCount({
@@ -97,5 +106,17 @@ export class UserRepository extends Repository<User> {
       .setParameters({ keyword: `%${keyword}%` })
       .take(takeCount)
       .getMany();
+  }
+
+  public async getSocketId(userId: number): Promise<string | undefined> {
+    const result = await this.createQueryBuilder(User_.TN)
+      .select(
+        `${User_.TN}.${User_.SOCKET_ID}`,
+        `${User_.TN}_${User_.SOCKET_ID}`,
+      )
+      .where(`${User_.TN}.${User_.ID} = :userId`, { userId })
+      .getRawOne();
+
+    return result[`${User_.TN}_${User_.SOCKET_ID}`];
   }
 }

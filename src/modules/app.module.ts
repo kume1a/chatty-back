@@ -8,6 +8,7 @@ import { UserRepository } from '../repositories/user.repository';
 import { UserModule } from './user.module';
 import { ChatModule } from './chat.module';
 import { MessageModule } from './message.module';
+import { SocketModule } from './socket.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { MessageModule } from './message.module';
     UserModule,
     ChatModule,
     MessageModule,
+    SocketModule,
   ],
   controllers: [AppController],
   providers: [

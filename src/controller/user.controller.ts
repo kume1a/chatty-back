@@ -10,14 +10,14 @@ import {
 } from '@nestjs/common';
 import { UserDto } from '../model/response/user.dto';
 import { UserService } from '../service/user.service';
-import { JwtAccessTokenAuthGuard } from '../security/jwt_access_token.guard';
+import { JwtHttpAccessGuard } from '../security/jwt_http_access.guard';
 import { CurrentUserPayloadInterceptor } from '../interceptor/current_user_payload.interceptor';
 import { CurrentUserPayload } from '../decorator/current_user_payload.decorator';
 import { UserPayload } from '../model/common/user_payload';
 import { GenericException } from '../exception/generic.exception';
-import { ErrorMessageCodes } from '../exception/error_messages';
+import { ErrorMessageCode } from '../exception/error_messages';
 
-@UseGuards(JwtAccessTokenAuthGuard)
+@UseGuards(JwtHttpAccessGuard)
 @Controller(UserController.PATH)
 export class UserController {
   public static readonly PATH = '/users';
@@ -44,7 +44,7 @@ export class UserController {
     if (!keyword) {
       throw new GenericException(
         HttpStatus.BAD_REQUEST,
-        ErrorMessageCodes.MISSING_KEYWORD,
+        ErrorMessageCode.MISSING_KEYWORD,
         'keyword is required',
       );
     }

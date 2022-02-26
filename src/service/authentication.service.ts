@@ -4,7 +4,7 @@ import { AuthenticationPayloadDto } from '../model/response/authentication_paylo
 import { JwtHelper } from '../helper/jwt.helper';
 import { PasswordEncoder } from '../helper/password_encoder';
 import { GenericException } from '../exception/generic.exception';
-import { ErrorMessageCodes } from '../exception/error_messages';
+import { ErrorMessageCode } from '../exception/error_messages';
 
 @Injectable()
 export class AuthenticationService {
@@ -28,7 +28,7 @@ export class AuthenticationService {
     if (await this.userService.existsByEmail(email)) {
       throw new GenericException(
         HttpStatus.BAD_REQUEST,
-        ErrorMessageCodes.EMAIL_ALREADY_EXISTS,
+        ErrorMessageCode.EMAIL_ALREADY_EXISTS,
         `user with email ${email} already exists`,
       );
     }
@@ -42,7 +42,10 @@ export class AuthenticationService {
       passwordHash,
     });
 
-    const accessToken = this.jwtHelper.generateAccessToken({ userId: user.id });
+    const accessToken = this.jwtHelper.generateAccessToken({
+      userId: user.id,
+      socketId: user.socketId,
+    });
 
     return new AuthenticationPayloadDto(accessToken);
   }
@@ -58,7 +61,7 @@ export class AuthenticationService {
     if (!existsByEmail) {
       throw new GenericException(
         HttpStatus.UNAUTHORIZED,
-        ErrorMessageCodes.EMAIL_OR_PASSWORD_INVALID,
+        ErrorMessageCode.EMAIL_OR_PASSWORD_INVALID,
         'provided email or password combination is invalid',
       );
     }
@@ -71,13 +74,16 @@ export class AuthenticationService {
     if (!passwordMatches) {
       throw new GenericException(
         HttpStatus.UNAUTHORIZED,
-        ErrorMessageCodes.EMAIL_OR_PASSWORD_INVALID,
+        ErrorMessageCode.EMAIL_OR_PASSWORD_INVALID,
         'provided email or password combination is invalid',
       );
     }
 
-    const userId = await this.userService.getIdForEmail(email);
-    const accessToken = this.jwtHelper.generateAccessToken({ userId });
+    const userPayload = await this.userService.getIdAndSocketIdForEmail(email);
+    const accessToken = this.jwtHelper.generateAccessToken({
+      userId: userPayload.userId,
+      socketId: userPayload.socketId,
+    });
 
     return new AuthenticationPayloadDto(accessToken);
   }

@@ -1,8 +1,8 @@
 import { IsNumber, IsOptional, IsString } from 'class-validator';
-import { Transform } from 'class-transformer';
+import { ToInt } from '../../decorator/transforms.decorator';
 
 export class SendChatMessageRequestDto {
-  @Transform((v) => parseInt(v.value))
+  @ToInt()
   @IsNumber()
   readonly chatId: number;
 

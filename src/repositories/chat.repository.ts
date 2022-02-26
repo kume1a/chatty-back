@@ -74,7 +74,7 @@ export class ChatRepository extends Repository<Chat> {
         `${ChatMessage_.TN}."${ChatMessage_.VIDEO_FILE_PATH}"`,
         `${ChatMessage_.TN}_${ChatMessage_.VIDEO_FILE_PATH}`,
       )
-      .where(`${ChatParticipant_.TN}.${ChatParticipant_.USER_ID} = :userId`)
+      .where(`${ChatParticipant_.TN}.${ChatParticipant_.USER_ID} != :userId`)
       .orderBy(`${Chat_.TN}_${Chat_.ID}`, 'DESC');
     if (lastId) {
       query.andWhere(`${Chat_.TN}_${Chat_.ID} > :lastId`);

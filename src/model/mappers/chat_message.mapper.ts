@@ -12,6 +12,7 @@ export class ChatMessageMapper extends SimpleMapper<
     return new ChatMessageDto(
       l.id,
       l.userId,
+      l.chatId,
       l.messageType,
       l.textMessage,
       l.imageFilePath,

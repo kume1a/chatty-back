@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { ChatMessageDto } from '../model/response/chat_message.dto';
 import { ChatMessageService } from '../service/chat_message.service';
-import { JwtAccessTokenAuthGuard } from '../security/jwt_access_token.guard';
+import { JwtHttpAccessGuard } from '../security/jwt_http_access.guard';
 import { PaginatedResponseDto } from '../model/response/core/paginated_response.dto';
 import { PaginationQueryRequestDto } from '../model/request/common/pagination_query_request.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
@@ -24,9 +24,9 @@ import { UserPayload } from '../model/common/user_payload';
 import { CurrentUserPayloadInterceptor } from '../interceptor/current_user_payload.interceptor';
 import { SendChatMessageRequestDto } from '../model/request/send_message_request.dto';
 import { GenericException } from '../exception/generic.exception';
-import { ErrorMessageCodes } from '../exception/error_messages';
+import { ErrorMessageCode } from '../exception/error_messages';
 
-@UseGuards(JwtAccessTokenAuthGuard)
+@UseGuards(JwtHttpAccessGuard)
 @Controller(MessageController.PATH)
 export class MessageController {
   public static readonly PATH = '/messages';
@@ -62,7 +62,7 @@ export class MessageController {
     ) {
       throw new GenericException(
         HttpStatus.UNPROCESSABLE_ENTITY,
-        ErrorMessageCodes.UNSUPPORTED_FILE_TYPE,
+        ErrorMessageCode.UNSUPPORTED_FILE_TYPE,
         'image file should be only type of jpg or jpeg',
       );
     }
@@ -70,7 +70,7 @@ export class MessageController {
     if (files.voiceFile && !files.voiceFile[0].originalname.match(/\.aac$/)) {
       throw new GenericException(
         HttpStatus.UNPROCESSABLE_ENTITY,
-        ErrorMessageCodes.UNSUPPORTED_FILE_TYPE,
+        ErrorMessageCode.UNSUPPORTED_FILE_TYPE,
         'voice file should be only type of aac',
       );
     }
@@ -78,12 +78,12 @@ export class MessageController {
     if (files.videoFile && !files.videoFile[0].originalname.match(/\.mp4$/)) {
       throw new GenericException(
         HttpStatus.UNPROCESSABLE_ENTITY,
-        ErrorMessageCodes.UNSUPPORTED_FILE_TYPE,
+        ErrorMessageCode.UNSUPPORTED_FILE_TYPE,
         'video file should be only type of mp4',
       );
     }
 
-    return this.chatMessageService.sendMessage({
+    return await this.chatMessageService.sendMessage({
       chatId: body.chatId,
       textMessage: body.textMessage,
       userId: currentUserPayload.userId,

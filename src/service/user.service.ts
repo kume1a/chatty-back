@@ -4,7 +4,8 @@ import { UserRepository } from '../repositories/user.repository';
 import { UserDto } from '../model/response/user.dto';
 import { UserMapper } from '../model/mappers/user.mapper';
 import { GenericException } from '../exception/generic.exception';
-import { ErrorMessageCodes } from '../exception/error_messages';
+import { ErrorMessageCode } from '../exception/error_messages';
+import { v4 } from 'uuid';
 
 @Injectable()
 export class UserService {
@@ -19,22 +20,18 @@ export class UserService {
     return countByEmail && countByEmail > 0;
   }
 
-  public async createUser({
-    firstName,
-    lastName,
-    email,
-    passwordHash,
-  }: {
+  public async createUser(params: {
     firstName: string;
     lastName: string;
     email: string;
     passwordHash: string;
   }): Promise<User> {
     const user = await this.userRepository.create({
-      firstName,
-      lastName,
-      email,
-      password: passwordHash,
+      firstName: params.firstName,
+      lastName: params.lastName,
+      email: params.email,
+      password: params.passwordHash,
+      socketId: v4(),
     });
 
     return this.userRepository.save(user);
@@ -44,8 +41,10 @@ export class UserService {
     return this.userRepository.getPasswordForEmail(email);
   }
 
-  public async getIdForEmail(email: string): Promise<number | undefined> {
-    return this.userRepository.getIdForEmail(email);
+  public async getIdAndSocketIdForEmail(
+    email: string,
+  ): Promise<{ userId: number; socketId: string } | undefined> {
+    return this.userRepository.getIdAndSocketIdForEmail(email);
   }
 
   public async getChatRecommendedUsers({
@@ -68,7 +67,7 @@ export class UserService {
     if (!user) {
       throw new GenericException(
         HttpStatus.NOT_FOUND,
-        ErrorMessageCodes.USER_NOT_FOUND,
+        ErrorMessageCode.USER_NOT_FOUND,
         `user with provided id ${userId} could not be found`,
       );
     }
@@ -89,5 +88,9 @@ export class UserService {
     });
 
     return Promise.all(users.map(this.userMapper.mapToRight));
+  }
+
+  public async getSocketId(userId: number): Promise<string> {
+    return this.userRepository.getSocketId(userId);
   }
 }

@@ -6,11 +6,11 @@ import {
 } from '@nestjs/common';
 import { JwtHelper } from '../helper/jwt.helper';
 import { GenericException } from '../exception/generic.exception';
-import { ErrorMessageCodes } from '../exception/error_messages';
+import { ErrorMessageCode } from '../exception/error_messages';
 import { JwtTokenExtractor } from '../helper/jwt_token.extractor';
 
 @Injectable()
-export class JwtAccessTokenAuthGuard implements CanActivate {
+export class JwtHttpAccessGuard implements CanActivate {
   constructor(
     private readonly jwtHelper: JwtHelper,
     private readonly jwtTokenExtractor: JwtTokenExtractor,
@@ -24,10 +24,13 @@ export class JwtAccessTokenAuthGuard implements CanActivate {
     if (!accessToken) {
       throw new GenericException(
         HttpStatus.UNAUTHORIZED,
-        ErrorMessageCodes.MISSING_TOKEN,
+        ErrorMessageCode.MISSING_TOKEN,
       );
     }
 
-    return this.jwtHelper.validateToken(accessToken);
+    return this.jwtHelper.validateToken({
+      token: accessToken,
+      isSocket: false,
+    });
   }
 }

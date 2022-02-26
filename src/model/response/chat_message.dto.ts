@@ -4,6 +4,7 @@ export class ChatMessageDto {
   constructor(
     readonly id: number,
     readonly userId: number,
+    readonly chatId: number,
     readonly type: MessageType,
     readonly textMessage: string,
     readonly imageFilePath: string,

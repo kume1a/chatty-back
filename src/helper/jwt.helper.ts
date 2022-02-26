@@ -3,15 +3,19 @@ import { environment } from '../environment';
 import { JwtService } from '@nestjs/jwt';
 import * as jwt from 'jsonwebtoken';
 import { GenericException } from '../exception/generic.exception';
-import { ErrorMessageCodes } from '../exception/error_messages';
+import { ErrorMessageCode } from '../exception/error_messages';
 import { UserPayload } from '../model/common/user_payload';
+import { GenericSocketException } from '../exception/geneic_socket.exception';
 
 @Injectable()
 export class JwtHelper {
   constructor(private readonly jwtService: JwtService) {}
 
-  public generateAccessToken({ userId }: { userId: number }): string {
-    const payload = { userId };
+  public generateAccessToken(params: {
+    userId: number;
+    socketId: string;
+  }): string {
+    const payload = { userId: params.userId, socketId: params.socketId };
 
     return this.jwtService.sign(payload, {
       expiresIn: environment.accessTokenExpiration,
@@ -19,15 +23,43 @@ export class JwtHelper {
     });
   }
 
-  public async validateToken(token: string): Promise<boolean> {
+  public async validateToken(params: {
+    token: string;
+    isSocket: boolean;
+  }): Promise<boolean> {
+    if (!params.token) {
+      if (params?.isSocket) {
+        throw new GenericSocketException(ErrorMessageCode.MISSING_TOKEN);
+      }
+
+      throw new GenericException(
+        HttpStatus.UNAUTHORIZED,
+        ErrorMessageCode.MISSING_TOKEN,
+      );
+    }
+
     await jwt.verify(
-      token,
+      params.token,
       environment.accessTokenSecret,
       async (err: jwt.VerifyErrors) => {
         if (err instanceof jwt.TokenExpiredError) {
+          if (params?.isSocket) {
+            throw new GenericSocketException(
+              ErrorMessageCode.EXPIRED_TOKEN,
+              err.message,
+            );
+          }
+
           throw new GenericException(
             HttpStatus.UNAUTHORIZED,
-            ErrorMessageCodes.EXPIRED_TOKEN,
+            ErrorMessageCode.EXPIRED_TOKEN,
+            err.message,
+          );
+        }
+
+        if (params?.isSocket) {
+          throw new GenericSocketException(
+            ErrorMessageCode.INVALID_TOKEN,
             err.message,
           );
         }
@@ -35,7 +67,7 @@ export class JwtHelper {
         if (err instanceof jwt.JsonWebTokenError) {
           throw new GenericException(
             HttpStatus.UNAUTHORIZED,
-            ErrorMessageCodes.INVALID_TOKEN,
+            ErrorMessageCode.INVALID_TOKEN,
             err.message,
           );
         }
@@ -54,6 +86,7 @@ export class JwtHelper {
       !payload ||
       typeof payload !== 'object' ||
       typeof payload?.userId !== 'number' ||
+      typeof payload?.socketId !== 'string' ||
       typeof payload?.iat !== 'number' ||
       typeof payload?.exp !== 'number'
     ) {
@@ -62,6 +95,7 @@ export class JwtHelper {
 
     return {
       userId: payload.userId,
+      socketId: payload.socketId,
       issuedAt: payload.iat,
       expirationTime: payload.exp,
     };

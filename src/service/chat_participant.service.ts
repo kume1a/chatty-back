@@ -16,4 +16,11 @@ export class ChatParticipantService {
       chatId: params.chatId,
     });
   }
+
+  public async getPartnerUserId(params: {
+    chatId: number;
+    userId: number;
+  }): Promise<number> {
+    return this.chatParticipantRepository.getOtherParticipantUserId(params);
+  }
 }

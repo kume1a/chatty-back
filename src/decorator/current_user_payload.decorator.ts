@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { UserPayloadRequest } from '../interceptor/current_user_payload.interceptor';
 import { GenericException } from '../exception/generic.exception';
-import { ErrorMessageCodes } from '../exception/error_messages';
+import { ErrorMessageCode } from '../exception/error_messages';
 
 export const CurrentUserPayload = createParamDecorator(
   (data: never, context: ExecutionContext) => {
@@ -14,7 +14,7 @@ export const CurrentUserPayload = createParamDecorator(
     if (!request.userPayload) {
       throw new GenericException(
         HttpStatus.BAD_REQUEST,
-        ErrorMessageCodes.MISSING_CURRENT_USER_PAYLOAD,
+        ErrorMessageCode.MISSING_CURRENT_USER_PAYLOAD,
       );
     }
 

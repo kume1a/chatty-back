@@ -17,6 +17,7 @@ export class ChatMapper {
     const lastMessage = new ChatMessageDto(
       v.lastChatMessageId,
       undefined,
+      undefined,
       v.lastChatMessageMessageType,
       v.lastChatMessageTextMessage,
       v.lastChatMessageImageFilePath,

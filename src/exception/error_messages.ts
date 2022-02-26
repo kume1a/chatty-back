@@ -1,4 +1,4 @@
-export enum ErrorMessageCodes {
+export enum ErrorMessageCode {
   INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
   EXPIRED_TOKEN = 'EXPIRED_TOKEN',
   INVALID_TOKEN = 'INVALID_TOKEN',

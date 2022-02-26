@@ -2,7 +2,7 @@ import { diskStorage } from 'multer';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { GenericException } from '../../exception/generic.exception';
 import { HttpStatus } from '@nestjs/common';
-import { ErrorMessageCodes } from '../../exception/error_messages';
+import { ErrorMessageCode } from '../../exception/error_messages';
 import * as path from 'path';
 
 export const multerConfig: MulterOptions = {
@@ -22,7 +22,7 @@ export const multerConfig: MulterOptions = {
       return callback(
         new GenericException(
           HttpStatus.BAD_REQUEST,
-          ErrorMessageCodes.UNSUPPORTED_FILE_TYPE,
+          ErrorMessageCode.UNSUPPORTED_FILE_TYPE,
         ),
         false,
       );

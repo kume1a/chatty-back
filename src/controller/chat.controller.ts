@@ -7,7 +7,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { JwtAccessTokenAuthGuard } from '../security/jwt_access_token.guard';
+import { JwtHttpAccessGuard } from '../security/jwt_http_access.guard';
 import { ChatDto } from '../model/response/chat.dto';
 import { ChatService } from '../service/chat.service';
 import { CurrentUserPayload } from '../decorator/current_user_payload.decorator';
@@ -16,7 +16,7 @@ import { CurrentUserPayloadInterceptor } from '../interceptor/current_user_paylo
 import { PaginationQueryRequestDto } from '../model/request/common/pagination_query_request.dto';
 import { PaginatedResponseDto } from '../model/response/core/paginated_response.dto';
 
-@UseGuards(JwtAccessTokenAuthGuard)
+@UseGuards(JwtHttpAccessGuard)
 @Controller(ChatController.PATH)
 export class ChatController {
   public static readonly PATH = '/chats';
