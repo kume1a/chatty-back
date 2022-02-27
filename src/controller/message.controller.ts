@@ -16,7 +16,7 @@ import { ChatMessageDto } from '../model/response/chat_message.dto';
 import { ChatMessageService } from '../service/chat_message.service';
 import { JwtHttpAccessGuard } from '../security/jwt_http_access.guard';
 import { PaginatedResponseDto } from '../model/response/core/paginated_response.dto';
-import { PaginationQueryRequestDto } from '../model/request/common/pagination_query_request.dto';
+import { LastIdPaginationRequestDto } from '../model/request/common/last_id_pagination_request.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from '../common/config/multer.config';
 import { CurrentUserPayload } from '../decorator/current_user_payload.decorator';
@@ -96,7 +96,7 @@ export class MessageController {
   @Get('/:chatId')
   public async getMessages(
     @Param('chatId', ParseIntPipe) chatId: number,
-    @Query() paginationQuery: PaginationQueryRequestDto,
+    @Query() paginationQuery: LastIdPaginationRequestDto,
   ): Promise<PaginatedResponseDto<ChatMessageDto>> {
     return this.chatMessageService.getMessages({
       chatId,

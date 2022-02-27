@@ -1,89 +1,78 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Chat, Chat_ } from '../model/entity/chat.entity';
-import { ChatMessage, ChatMessage_ } from '../model/entity/chat_message.entity';
+import { ChatMessage_ } from '../model/entity/chat_message.entity';
 import { ChatParticipant_ } from '../model/entity/chat_participant.entity';
 import { User_ } from '../model/entity/user.entity';
 import { ChatEntryView } from '../model/entity/view/chat_entry.view';
 
 @EntityRepository(Chat)
 export class ChatRepository extends Repository<Chat> {
-  public async getChats({
-    userId,
-    lastId,
-    takeCount,
-  }: {
+  public async getChats(params: {
     userId: number;
-    lastId: number;
-    takeCount: number;
+    page: number;
+    pageSize: number;
   }): Promise<ChatEntryView[]> {
-    const query = this.createQueryBuilder(Chat_.TN)
-      .leftJoin(
-        (qb) =>
-          qb
-            .from(ChatMessage, ChatMessage_.TN)
-            .orderBy(`${ChatMessage_.TN}.${ChatMessage_.ID}`, 'DESC')
-            .take(1),
-        ChatMessage_.TN,
-        `${ChatMessage_.TN}."${ChatMessage_.CHAT_ID}" = ${Chat_.TN}.${Chat_.ID}`,
-      )
-      .leftJoin(
-        `${Chat_.TN}.${Chat_.RL_CHAT_PARTICIPANTS}`,
-        ChatParticipant_.TN,
-      )
-      .leftJoin(`${ChatParticipant_.TN}.${ChatParticipant_.RL_USER}`, User_.TN)
-      .select(`${Chat_.TN}.${Chat_.ID}`, `${Chat_.TN}_${Chat_.ID}`)
-      .addSelect(`${Chat_.TN}.${Chat_.NAME}`, `${Chat_.TN}_${Chat_.NAME}`)
-      .addSelect(
-        `${Chat_.TN}.${Chat_.CREATED_AT}`,
-        `${Chat_.TN}_${Chat_.CREATED_AT}`,
-      )
-      .addSelect(`${User_.TN}.${User_.ID}`, `${User_.TN}_${User_.ID}`)
-      .addSelect(
-        `${User_.TN}.${User_.FIRST_NAME}`,
-        `${User_.TN}_${User_.FIRST_NAME}`,
-      )
-      .addSelect(
-        `${User_.TN}.${User_.LAST_NAME}`,
-        `${User_.TN}_${User_.LAST_NAME}`,
-      )
-      .addSelect(
-        `${User_.TN}.${User_.PROFILE_IMAGE_PATH}`,
-        `${User_.TN}_${User_.PROFILE_IMAGE_PATH}`,
-      )
-      .addSelect(
-        `${ChatMessage_.TN}."${ChatMessage_.ID}"`,
-        `${ChatMessage_.TN}_${ChatMessage_.ID}`,
-      )
-      .addSelect(
-        `${ChatMessage_.TN}."${ChatMessage_.MESSAGE_TYPE}"`,
-        `${ChatMessage_.TN}_${ChatMessage_.MESSAGE_TYPE}`,
-      )
-      .addSelect(
-        `${ChatMessage_.TN}."${ChatMessage_.TEXT_MESSAGE}"`,
-        `${ChatMessage_.TN}_${ChatMessage_.TEXT_MESSAGE}`,
-      )
-      .addSelect(
-        `${ChatMessage_.TN}."${ChatMessage_.IMAGE_FILE_PATH}"`,
-        `${ChatMessage_.TN}_${ChatMessage_.IMAGE_FILE_PATH}`,
-      )
-      .addSelect(
-        `${ChatMessage_.TN}."${ChatMessage_.VOICE_FILE_PATH}"`,
-        `${ChatMessage_.TN}_${ChatMessage_.VOICE_FILE_PATH}`,
-      )
-      .addSelect(
-        `${ChatMessage_.TN}."${ChatMessage_.VIDEO_FILE_PATH}"`,
-        `${ChatMessage_.TN}_${ChatMessage_.VIDEO_FILE_PATH}`,
-      )
-      .where(`${ChatParticipant_.TN}.${ChatParticipant_.USER_ID} != :userId`)
-      .orderBy(`${Chat_.TN}_${Chat_.ID}`, 'DESC');
-    if (lastId) {
-      query.andWhere(`${Chat_.TN}_${Chat_.ID} > :lastId`);
-    }
-
-    const rawData = await query
-      .setParameters({ lastId, userId })
-      .take(takeCount)
-      .getRawMany();
+    const rawData = await this.query(
+      `
+      SELECT
+        "${Chat_.TN}"."${Chat_.ID}"                            AS "${Chat_.TN}_${Chat_.ID}",
+        "${Chat_.TN}"."${Chat_.CREATED_AT}"                    AS "${Chat_.TN}_${Chat_.CREATED_AT}",
+        "${Chat_.TN}"."${Chat_.NAME}"                          AS "${Chat_.TN}_${Chat_.NAME}",
+        "${User_.TN}"."${User_.ID}"                            AS "${User_.TN}_${User_.ID}",
+        "${User_.TN}"."${User_.FIRST_NAME}"                    AS "${User_.TN}_${User_.FIRST_NAME}",
+        "${User_.TN}"."${User_.LAST_NAME}"                     AS "${User_.TN}_${User_.LAST_NAME}",
+        "${User_.TN}"."${User_.PROFILE_IMAGE_PATH}"            AS "${User_.TN}_${User_.PROFILE_IMAGE_PATH}",
+        "${ChatMessage_.TN}"."${ChatMessage_.ID}"              AS "${ChatMessage_.TN}_${ChatMessage_.ID}",
+        "${ChatMessage_.TN}"."${ChatMessage_.CREATED_AT}"      AS "${ChatMessage_.TN}_${ChatMessage_.CREATED_AT}",
+        "${ChatMessage_.TN}"."${ChatMessage_.MESSAGE_TYPE}"    AS "${ChatMessage_.TN}_${ChatMessage_.MESSAGE_TYPE}",
+        "${ChatMessage_.TN}"."${ChatMessage_.TEXT_MESSAGE}"    AS "${ChatMessage_.TN}_${ChatMessage_.TEXT_MESSAGE}",
+        "${ChatMessage_.TN}"."${ChatMessage_.IMAGE_FILE_PATH}" AS "${ChatMessage_.TN}_${ChatMessage_.IMAGE_FILE_PATH}",
+        "${ChatMessage_.TN}"."${ChatMessage_.VOICE_FILE_PATH}" AS "${ChatMessage_.TN}_${ChatMessage_.VOICE_FILE_PATH}",
+        "${ChatMessage_.TN}"."${ChatMessage_.VIDEO_FILE_PATH}" AS "${ChatMessage_.TN}_${ChatMessage_.VIDEO_FILE_PATH}"
+      FROM "${Chat_.TN}"
+      LEFT JOIN (
+        SELECT
+          "${ChatMessage_.TN}"."${ChatMessage_.ID}",
+          "${ChatMessage_.TN}"."${ChatMessage_.CHAT_ID}",
+          "${ChatMessage_.TN}"."${ChatMessage_.CREATED_AT}",
+          "${ChatMessage_.TN}"."${ChatMessage_.MESSAGE_TYPE}",
+          "${ChatMessage_.TN}"."${ChatMessage_.TEXT_MESSAGE}",
+          "${ChatMessage_.TN}"."${ChatMessage_.IMAGE_FILE_PATH}",
+          "${ChatMessage_.TN}"."${ChatMessage_.VOICE_FILE_PATH}",
+          "${ChatMessage_.TN}"."${ChatMessage_.VIDEO_FILE_PATH}"
+        FROM "${ChatMessage_.TN}"
+        WHERE "${ChatMessage_.TN}"."${ChatMessage_.DELETED_AT}" IS NULL
+        ORDER BY "${ChatMessage_.TN}"."${ChatMessage_.ID}" DESC
+        LIMIT 1
+      ) "${ChatMessage_.TN}"
+        ON "${ChatMessage_.TN}"."${ChatMessage_.CHAT_ID}" = "${Chat_.TN}"."${Chat_.ID}"
+      LEFT JOIN "${ChatParticipant_.TN}"
+        ON "${ChatParticipant_.TN}"."${ChatParticipant_.CHAT_ID}" = "${Chat_.TN}"."${Chat_.ID}"
+        AND "${ChatParticipant_.TN}"."${ChatParticipant_.DELETED_AT}" IS NULL
+      LEFT JOIN "${User_.TN}"
+        ON "${User_.TN}"."${User_.ID}" = "${ChatParticipant_.TN}"."${ChatParticipant_.USER_ID}"
+        AND "${User_.TN}"."${User_.DELETED_AT}" IS NULL
+      WHERE
+        "${Chat_.TN}"."${Chat_.ID}" IN (
+          SELECT "${ChatParticipant_.TN}"."${ChatParticipant_.CHAT_ID}"
+            FROM "${ChatParticipant_.TN}"
+            WHERE
+              "${ChatParticipant_.TN}"."${ChatParticipant_.USER_ID}" = $1
+              AND "${ChatParticipant_.TN}"."${ChatParticipant_.DELETED_AT}" IS NULL
+        )
+        AND "${ChatParticipant_.TN}"."${ChatParticipant_.USER_ID}" != $2
+        AND "${Chat_.TN}"."${Chat_.DELETED_AT}" IS NULL
+      ORDER BY "${Chat_.TN}_${Chat_.ID}" DESC
+      OFFSET $3
+      LIMIT $4
+    `,
+      [
+        params.userId,
+        params.userId,
+        params.page * params.pageSize,
+        params.pageSize,
+      ],
+    );
 
     return rawData.map((e) => ({
       chatId: e[`${Chat_.TN}_${Chat_.ID}`],

@@ -45,7 +45,7 @@ export class ChatMessageRepository extends Repository<ChatMessage> {
   }): Promise<ChatMessage[]> {
     const query = this.createQueryBuilder(ChatMessage_.TN);
     if (lastId) {
-      query.where(`${ChatMessage_.TN}.${ChatMessage_.ID} > :lastId`);
+      query.where(`${ChatMessage_.TN}.${ChatMessage_.ID} < :lastId`);
     }
 
     return query

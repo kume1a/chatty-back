@@ -15,17 +15,17 @@ export class ChatService {
 
   public async getChats({
     userId,
-    lastId,
-    takeCount,
+    page,
+    pageSize,
   }: {
     userId: number;
-    lastId: number;
-    takeCount: number;
+    page: number;
+    pageSize: number;
   }): Promise<PaginatedResponseDto<ChatDto>> {
     const chats = await this.chatRepository.getChats({
       userId,
-      lastId,
-      takeCount,
+      page,
+      pageSize,
     });
     const totalCount = await this.chatRepository.countForUser(userId);
 
