@@ -1,8 +1,9 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { BaseEntity, BaseEntity_ } from './common/base.entity';
 import { User } from './user.entity';
 import { Chat } from './chat.entity';
 import { MessageType } from '../enums/message_type.enum';
+import { ImageMeta } from './image_meta.entity';
 
 export class ChatMessage_ extends BaseEntity_ {
   public static readonly TN = 'chat_messages';
@@ -13,9 +14,10 @@ export class ChatMessage_ extends BaseEntity_ {
   public static readonly VIDEO_FILE_PATH = 'videoFilePath';
   public static readonly GIF_URL = 'gifUrl';
   public static readonly MESSAGE_TYPE = 'messageType';
-
   public static readonly USER_ID = 'userId';
   public static readonly CHAT_ID = 'chatId';
+
+  public static readonly RL_IMAGE_META = 'imageMeta';
 }
 
 @Entity(ChatMessage_.TN)
@@ -55,4 +57,7 @@ export class ChatMessage extends BaseEntity {
   @ManyToOne(() => Chat, (chat) => chat.chatMessages)
   @JoinColumn({ name: ChatMessage_.CHAT_ID })
   chat: Chat;
+
+  @OneToOne(() => ImageMeta, (imageMeta) => imageMeta.chatMessage)
+  imageMeta: ImageMeta | null;
 }

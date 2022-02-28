@@ -7,17 +7,22 @@ import { GeneralExceptionFilter } from '../exception/general_exception.filter';
 import { UserRepository } from '../repositories/user.repository';
 import { UserModule } from './user.module';
 import { ChatModule } from './chat.module';
-import { MessageModule } from './message.module';
+import { ChatMessageModule } from './chat_message_module';
 import { SocketModule } from './socket.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', 'upload'),
+    }),
     TypeOrmModule.forFeature([UserRepository]),
     AuthenticationModule,
     UserModule,
     ChatModule,
-    MessageModule,
+    ChatMessageModule,
     SocketModule,
   ],
   controllers: [AppController],

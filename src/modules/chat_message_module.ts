@@ -9,6 +9,8 @@ import { SocketModule } from './socket.module';
 import { UserRepository } from '../repositories/user.repository';
 import { ChatParticipantService } from '../service/chat_participant.service';
 import { ChatParticipantRepository } from '../repositories/chat_participant.repository';
+import { ImageHelper } from '../helper/image.helper';
+import { ImageMetaRepository } from '../repositories/image_meta.repository';
 
 @Module({
   imports: [
@@ -17,10 +19,17 @@ import { ChatParticipantRepository } from '../repositories/chat_participant.repo
       ChatMessageRepository,
       UserRepository,
       ChatParticipantRepository,
+      ImageMetaRepository,
     ]),
     SocketModule,
   ],
-  providers: [ChatMessageService, ChatMessageMapper, ChatParticipantService],
+
+  providers: [
+    ChatMessageService,
+    ChatMessageMapper,
+    ChatParticipantService,
+    ImageHelper,
+  ],
   controllers: [MessageController],
 })
-export class MessageModule {}
+export class ChatMessageModule {}

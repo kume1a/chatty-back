@@ -25,6 +25,7 @@ export class ChatMapper {
       v.lastChatMessageVoiceFilePath,
       undefined,
       v.lastChatMessageCreatedAt,
+      undefined,
     );
     return new ChatDto(v.chatId, v.chatCreatedAt, user, lastMessage);
   }

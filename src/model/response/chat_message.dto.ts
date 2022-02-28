@@ -1,4 +1,5 @@
 import { MessageType } from '../enums/message_type.enum';
+import { ImageMetaDto } from './image_meta.dto';
 
 export class ChatMessageDto {
   constructor(
@@ -12,5 +13,6 @@ export class ChatMessageDto {
     readonly voiceFilePath: string,
     readonly gifUrl: string,
     readonly createdAt: Date,
+    readonly imageMeta: ImageMetaDto | undefined,
   ) {}
 }
