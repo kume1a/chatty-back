@@ -1,8 +1,5 @@
 import { diskStorage } from 'multer';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
-import { GenericException } from '../../exception/generic.exception';
-import { HttpStatus } from '@nestjs/common';
-import { ErrorMessageCode } from '../../exception/error-message-code';
 import * as path from 'path';
 
 export const multerConfig: MulterOptions = {
@@ -17,18 +14,18 @@ export const multerConfig: MulterOptions = {
       callback(null, fileName);
     },
   }),
-  fileFilter: (_, file, callback) => {
-    if (!file.originalname.match(/\.((jpeg)|(jpg)|(aac)|(mp4))$/)) {
-      return callback(
-        new GenericException(
-          HttpStatus.BAD_REQUEST,
-          ErrorMessageCode.UNSUPPORTED_FILE_TYPE,
-        ),
-        false,
-      );
-    }
-
-    callback(null, true);
-  },
+  // fileFilter: (_, file, callback) => {
+  //   if (!file.originalname.match(/\.((jpeg)|(jpg)|(aac)|(mp4))$/)) {
+  //     return callback(
+  //       new GenericException(
+  //         HttpStatus.BAD_REQUEST,
+  //         ErrorMessageCode.UNSUPPORTED_FILE_TYPE,
+  //       ),
+  //       false,
+  //     );
+  //   }
+  //
+  //   callback(null, true);
+  // },
   // limits: { fileSize: configs.general.PROFILE_UPLOAD_FILE_SIZE_MAX },
 };

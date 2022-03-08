@@ -3,5 +3,6 @@ export enum MessageType {
   IMAGE = 'IMAGE',
   VIDEO = 'VIDEO',
   VOICE = 'VOICE',
+  FILE = 'FILE',
   GIF = 'GIF',
 }

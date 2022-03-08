@@ -16,6 +16,7 @@ export class ChatMessageRepository extends Repository<ChatMessage> {
     imageFilePath?: string | undefined;
     voiceFilePath?: string | undefined;
     videoFilePath?: string | undefined;
+    filePath?: string | undefined;
   }): Promise<ChatMessage> {
     const message = this.create({
       chatId: p.chatId,
@@ -25,6 +26,7 @@ export class ChatMessageRepository extends Repository<ChatMessage> {
       imageFilePath: p.imageFilePath,
       voiceFilePath: p.voiceFilePath,
       videoFilePath: p.videoFilePath,
+      filePath: p.filePath,
     });
 
     return this.save(message);

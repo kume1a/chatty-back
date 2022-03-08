@@ -29,6 +29,7 @@ export class ChatMessageService {
     imageFilePath?: string | undefined;
     voiceFilePath?: string | undefined;
     videoFilePath?: string | undefined;
+    filePath?: string | undefined;
   }) {
     let messageType = MessageType.TEXT;
     if (p.imageFilePath) {
@@ -37,6 +38,8 @@ export class ChatMessageService {
       messageType = MessageType.VOICE;
     } else if (p.videoFilePath) {
       messageType = MessageType.VIDEO;
+    } else if (p.filePath) {
+      messageType = MessageType.FILE;
     }
 
     const message = await this.chatMessageRepository.createMessage({
@@ -47,6 +50,7 @@ export class ChatMessageService {
       imageFilePath: getFileName(p.imageFilePath),
       voiceFilePath: getFileName(p.voiceFilePath),
       videoFilePath: getFileName(p.videoFilePath),
+      filePath: getFileName(p.filePath),
     });
 
     let imageMeta: ImageMeta | undefined;

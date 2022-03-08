@@ -18,6 +18,7 @@ export class ChatMessageMapper {
       chatMessage.imageFilePath,
       chatMessage.videoFilePath,
       chatMessage.voiceFilePath,
+      chatMessage.filePath,
       chatMessage.gifURl,
       chatMessage.createdAt,
       imageMeta || chatMessage.imageMeta

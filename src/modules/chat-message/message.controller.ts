@@ -40,6 +40,7 @@ export class MessageController {
         { name: 'imageFile', maxCount: 1 },
         { name: 'voiceFile', maxCount: 1 },
         { name: 'videoFile', maxCount: 1 },
+        { name: 'file', maxCount: 1 },
       ],
       multerConfig,
     ),
@@ -54,6 +55,7 @@ export class MessageController {
       imageFile?: Express.Multer.File[];
       voiceFile?: Express.Multer.File[];
       videoFile?: Express.Multer.File[];
+      file?: Express.Multer.File[];
     },
   ): Promise<ChatMessageDto> {
     if (
@@ -61,7 +63,7 @@ export class MessageController {
       !files.imageFile[0].originalname.match(/\.((jpeg)|(jpg))$/)
     ) {
       throw new GenericException(
-        HttpStatus.UNPROCESSABLE_ENTITY,
+        HttpStatus.UNSUPPORTED_MEDIA_TYPE,
         ErrorMessageCode.UNSUPPORTED_FILE_TYPE,
         'image file should be only type of jpg or jpeg',
       );
@@ -69,7 +71,7 @@ export class MessageController {
 
     if (files.voiceFile && !files.voiceFile[0].originalname.match(/\.aac$/)) {
       throw new GenericException(
-        HttpStatus.UNPROCESSABLE_ENTITY,
+        HttpStatus.UNSUPPORTED_MEDIA_TYPE,
         ErrorMessageCode.UNSUPPORTED_FILE_TYPE,
         'voice file should be only type of aac',
       );
@@ -77,7 +79,7 @@ export class MessageController {
 
     if (files.videoFile && !files.videoFile[0].originalname.match(/\.mp4$/)) {
       throw new GenericException(
-        HttpStatus.UNPROCESSABLE_ENTITY,
+        HttpStatus.UNSUPPORTED_MEDIA_TYPE,
         ErrorMessageCode.UNSUPPORTED_FILE_TYPE,
         'video file should be only type of mp4',
       );
@@ -90,6 +92,7 @@ export class MessageController {
       imageFilePath: files.imageFile ? files.imageFile[0].path : undefined,
       voiceFilePath: files.voiceFile ? files.voiceFile[0].path : undefined,
       videoFilePath: files.videoFile ? files.videoFile[0].path : undefined,
+      filePath: files.file ? files.file[0].path : undefined,
     });
   }
 

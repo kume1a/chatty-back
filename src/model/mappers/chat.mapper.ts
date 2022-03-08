@@ -23,6 +23,7 @@ export class ChatMapper {
       v.lastChatMessageImageFilePath,
       v.lastChatMessageVideoFilePath,
       v.lastChatMessageVoiceFilePath,
+      v.lastChatMessageFilePath,
       undefined,
       v.lastChatMessageCreatedAt,
       undefined,

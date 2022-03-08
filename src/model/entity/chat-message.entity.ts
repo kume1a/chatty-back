@@ -12,6 +12,7 @@ export class ChatMessage_ extends BaseEntity_ {
   public static readonly IMAGE_FILE_PATH = 'imageFilePath';
   public static readonly VOICE_FILE_PATH = 'voiceFilePath';
   public static readonly VIDEO_FILE_PATH = 'videoFilePath';
+  public static readonly FILE_PATH = 'filePath';
   public static readonly GIF_URL = 'gifUrl';
   public static readonly MESSAGE_TYPE = 'messageType';
   public static readonly USER_ID = 'userId';
@@ -33,6 +34,9 @@ export class ChatMessage extends BaseEntity {
 
   @Column({ name: ChatMessage_.VIDEO_FILE_PATH, nullable: true })
   videoFilePath: string | null;
+
+  @Column({ name: ChatMessage_.FILE_PATH, nullable: true })
+  filePath: string | null;
 
   @Column({ name: ChatMessage_.GIF_URL, nullable: true })
   gifURl: string | null;

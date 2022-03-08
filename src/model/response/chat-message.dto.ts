@@ -11,6 +11,7 @@ export class ChatMessageDto {
     readonly imageFilePath: string,
     readonly videoFilePath: string,
     readonly voiceFilePath: string,
+    readonly filePath: string,
     readonly gifUrl: string,
     readonly createdAt: Date,
     readonly imageMeta: ImageMetaDto | undefined,

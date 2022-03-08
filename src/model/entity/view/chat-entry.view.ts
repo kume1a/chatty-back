@@ -15,4 +15,5 @@ export interface ChatEntryView {
   readonly lastChatMessageImageFilePath: string | null;
   readonly lastChatMessageVoiceFilePath: string | null;
   readonly lastChatMessageVideoFilePath: string | null;
+  readonly lastChatMessageFilePath: string | null;
 }

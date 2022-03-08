@@ -28,7 +28,8 @@ export class ChatRepository extends Repository<Chat> {
         "${ChatMessage_.TN}"."${ChatMessage_.TEXT_MESSAGE}"    AS "${ChatMessage_.TN}_${ChatMessage_.TEXT_MESSAGE}",
         "${ChatMessage_.TN}"."${ChatMessage_.IMAGE_FILE_PATH}" AS "${ChatMessage_.TN}_${ChatMessage_.IMAGE_FILE_PATH}",
         "${ChatMessage_.TN}"."${ChatMessage_.VOICE_FILE_PATH}" AS "${ChatMessage_.TN}_${ChatMessage_.VOICE_FILE_PATH}",
-        "${ChatMessage_.TN}"."${ChatMessage_.VIDEO_FILE_PATH}" AS "${ChatMessage_.TN}_${ChatMessage_.VIDEO_FILE_PATH}"
+        "${ChatMessage_.TN}"."${ChatMessage_.VIDEO_FILE_PATH}" AS "${ChatMessage_.TN}_${ChatMessage_.VIDEO_FILE_PATH}",
+        "${ChatMessage_.TN}"."${ChatMessage_.FILE_PATH}"       AS "${ChatMessage_.TN}_${ChatMessage_.FILE_PATH}"
       FROM "${Chat_.TN}"
       LEFT JOIN (
         SELECT
@@ -39,7 +40,8 @@ export class ChatRepository extends Repository<Chat> {
           "${ChatMessage_.TN}"."${ChatMessage_.TEXT_MESSAGE}",
           "${ChatMessage_.TN}"."${ChatMessage_.IMAGE_FILE_PATH}",
           "${ChatMessage_.TN}"."${ChatMessage_.VOICE_FILE_PATH}",
-          "${ChatMessage_.TN}"."${ChatMessage_.VIDEO_FILE_PATH}"
+          "${ChatMessage_.TN}"."${ChatMessage_.VIDEO_FILE_PATH}",
+          "${ChatMessage_.TN}"."${ChatMessage_.FILE_PATH}"
         FROM "${ChatMessage_.TN}"
         WHERE "${ChatMessage_.TN}"."${ChatMessage_.DELETED_AT}" IS NULL
         ORDER BY "${ChatMessage_.TN}"."${ChatMessage_.ID}" DESC
