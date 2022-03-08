@@ -3,9 +3,9 @@ import { environment } from '../environment';
 import { JwtService } from '@nestjs/jwt';
 import * as jwt from 'jsonwebtoken';
 import { GenericException } from '../exception/generic.exception';
-import { ErrorMessageCode } from '../exception/error_messages';
-import { UserPayload } from '../model/common/user_payload';
-import { GenericSocketException } from '../exception/geneic_socket.exception';
+import { ErrorMessageCode } from '../exception/error-message-code';
+import { UserPayload } from '../model/common/user.payload';
+import { GenericSocketException } from '../exception/geneic-socket.exception';
 
 @Injectable()
 export class JwtHelper {

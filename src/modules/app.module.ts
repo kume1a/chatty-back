@@ -1,14 +1,19 @@
-import { HttpStatus, Module, ValidationPipe } from '@nestjs/common';
-import { AppController } from '../controller/app.controller';
+import {
+  CacheModule,
+  HttpStatus,
+  Module,
+  ValidationPipe,
+} from '@nestjs/common';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthenticationModule } from './authentication.module';
-import { GeneralExceptionFilter } from '../exception/general_exception.filter';
-import { UserRepository } from '../repositories/user.repository';
-import { UserModule } from './user.module';
-import { ChatModule } from './chat.module';
-import { ChatMessageModule } from './chat_message_module';
-import { SocketModule } from './socket.module';
+import { AuthenticationModule } from './authentication/authentication.module';
+import { GeneralExceptionFilter } from '../exception/general-exception.filter';
+import { UserRepository } from './user/user.repository';
+import { UserModule } from './user/user.module';
+import redisStore from 'cache-manager-redis-store';
+import { ChatModule } from './chat/chat.module';
+import { ChatMessageModule } from './chat-message/chat-message.module';
+import { SocketModule } from './socket/socket.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
@@ -19,13 +24,22 @@ import { join } from 'path';
       rootPath: join(__dirname, '..', '..', 'upload'),
     }),
     TypeOrmModule.forFeature([UserRepository]),
+    CacheModule.register({
+      store: redisStore,
+      host: 'localhost',
+      port: 6379,
+      isGlobal: true,
+      socket: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
     AuthenticationModule,
     UserModule,
     ChatModule,
     ChatMessageModule,
     SocketModule,
   ],
-  controllers: [AppController],
   providers: [
     {
       provide: APP_PIPE,

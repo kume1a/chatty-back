@@ -1,7 +1,7 @@
 import { BaseEntity, BaseEntity_ } from './common/base.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
-import { ChatParticipant } from './chat_participant.entity';
-import { ChatMessage } from './chat_message.entity';
+import { ChatParticipant } from './chat-participant.entity';
+import { ChatMessage } from './chat-message.entity';
 
 export class Chat_ extends BaseEntity_ {
   public static readonly TN = 'chats';

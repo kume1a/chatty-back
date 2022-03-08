@@ -2,7 +2,7 @@ import { diskStorage } from 'multer';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { GenericException } from '../../exception/generic.exception';
 import { HttpStatus } from '@nestjs/common';
-import { ErrorMessageCode } from '../../exception/error_messages';
+import { ErrorMessageCode } from '../../exception/error-message-code';
 import * as path from 'path';
 
 export const multerConfig: MulterOptions = {

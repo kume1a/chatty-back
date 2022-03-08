@@ -1,5 +1,5 @@
 import { UserDto } from './user.dto';
-import { ChatMessageDto } from './chat_message.dto';
+import { ChatMessageDto } from './chat-message.dto';
 
 export class ChatDto {
   constructor(

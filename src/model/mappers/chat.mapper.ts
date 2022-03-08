@@ -1,9 +1,9 @@
 import { Chat } from '../entity/chat.entity';
 import { ChatDto } from '../response/chat.dto';
 import { Injectable } from '@nestjs/common';
-import { ChatEntryView } from '../entity/view/chat_entry.view';
+import { ChatEntryView } from '../entity/view/chat-entry.view';
 import { UserDto } from '../response/user.dto';
-import { ChatMessageDto } from '../response/chat_message.dto';
+import { ChatMessageDto } from '../response/chat-message.dto';
 
 @Injectable()
 export class ChatMapper {
